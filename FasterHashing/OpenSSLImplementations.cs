@@ -49,6 +49,16 @@ namespace FasterHashing
         }
 
         /// <summary>
+        /// Gets the size of the message digest in bytes
+        /// </summary>
+        public override int OutputBlockSize { get { return m_size; } }
+
+        /// <summary>
+        /// Gets the size of the message digest in bytes
+        /// </summary>
+        public override int InputBlockSize { get { return InteropOpenSSL10.EVP_MD_block_size(m_digestmethod); } }
+
+        /// <summary>
         /// Initializes the hashing algorithm
         /// </summary>
         public override void Initialize()
@@ -162,8 +172,8 @@ namespace FasterHashing
 
             return null;
         }
-
     }
+
 
     /// <summary>
     /// Implementation of the MD5 hash algorithm, using OpenSSL 1.0
@@ -207,6 +217,16 @@ namespace FasterHashing
 
             m_size = InteropOpenSSL10.EVP_MD_size(m_digestmethod);
         }
+
+        /// <summary>
+        /// Gets the size of the message digest in bytes
+        /// </summary>
+        public override int OutputBlockSize { get { return m_size; } }
+
+        /// <summary>
+        /// Gets the size of the message digest in bytes
+        /// </summary>
+        public override int InputBlockSize { get { return InteropOpenSSL10.EVP_MD_block_size(m_digestmethod); } }
 
         /// <summary>
         /// Initializes the hashing algorithm
@@ -300,9 +320,8 @@ namespace FasterHashing
 
             base.Dispose(disposing);
         }
-
-
     }
+
 
     /// <summary>
     /// Implementation of the SHA1 hash algorithm, using OpenSSL 1.0
@@ -346,6 +365,16 @@ namespace FasterHashing
 
             m_size = InteropOpenSSL10.EVP_MD_size(m_digestmethod);
         }
+
+        /// <summary>
+        /// Gets the size of the message digest in bytes
+        /// </summary>
+        public override int OutputBlockSize { get { return m_size; } }
+
+        /// <summary>
+        /// Gets the size of the message digest in bytes
+        /// </summary>
+        public override int InputBlockSize { get { return InteropOpenSSL10.EVP_MD_block_size(m_digestmethod); } }
 
         /// <summary>
         /// Initializes the hashing algorithm
@@ -439,9 +468,8 @@ namespace FasterHashing
 
             base.Dispose(disposing);
         }
-
-
     }
+
 
     /// <summary>
     /// Implementation of the SHA256 hash algorithm, using OpenSSL 1.0
@@ -485,6 +513,16 @@ namespace FasterHashing
 
             m_size = InteropOpenSSL10.EVP_MD_size(m_digestmethod);
         }
+
+        /// <summary>
+        /// Gets the size of the message digest in bytes
+        /// </summary>
+        public override int OutputBlockSize { get { return m_size; } }
+
+        /// <summary>
+        /// Gets the size of the message digest in bytes
+        /// </summary>
+        public override int InputBlockSize { get { return InteropOpenSSL10.EVP_MD_block_size(m_digestmethod); } }
 
         /// <summary>
         /// Initializes the hashing algorithm
@@ -578,9 +616,8 @@ namespace FasterHashing
 
             base.Dispose(disposing);
         }
-
-
     }
+
 
     /// <summary>
     /// Implementation of the SHA384 hash algorithm, using OpenSSL 1.0
@@ -624,6 +661,16 @@ namespace FasterHashing
 
             m_size = InteropOpenSSL10.EVP_MD_size(m_digestmethod);
         }
+
+        /// <summary>
+        /// Gets the size of the message digest in bytes
+        /// </summary>
+        public override int OutputBlockSize { get { return m_size; } }
+
+        /// <summary>
+        /// Gets the size of the message digest in bytes
+        /// </summary>
+        public override int InputBlockSize { get { return InteropOpenSSL10.EVP_MD_block_size(m_digestmethod); } }
 
         /// <summary>
         /// Initializes the hashing algorithm
@@ -717,9 +764,8 @@ namespace FasterHashing
 
             base.Dispose(disposing);
         }
-
-
     }
+
 
     /// <summary>
     /// Implementation of the SHA512 hash algorithm, using OpenSSL 1.0
@@ -763,6 +809,16 @@ namespace FasterHashing
 
             m_size = InteropOpenSSL10.EVP_MD_size(m_digestmethod);
         }
+
+        /// <summary>
+        /// Gets the size of the message digest in bytes
+        /// </summary>
+        public override int OutputBlockSize { get { return m_size; } }
+
+        /// <summary>
+        /// Gets the size of the message digest in bytes
+        /// </summary>
+        public override int InputBlockSize { get { return InteropOpenSSL10.EVP_MD_block_size(m_digestmethod); } }
 
         /// <summary>
         /// Initializes the hashing algorithm
@@ -856,9 +912,8 @@ namespace FasterHashing
 
             base.Dispose(disposing);
         }
-
-
     }
+
 
     /// <summary>
     /// Implementation of a hash algorithm, using OpenSSL 1.0
@@ -893,6 +948,16 @@ namespace FasterHashing
 
             m_size = InteropOpenSSL11.EVP_MD_size(m_digestmethod);
         }
+
+        /// <summary>
+        /// Gets the size of the message digest in bytes
+        /// </summary>
+        public override int OutputBlockSize { get { return m_size; } }
+
+        /// <summary>
+        /// Gets the size of the message digest in bytes
+        /// </summary>
+        public override int InputBlockSize { get { return InteropOpenSSL11.EVP_MD_block_size(m_digestmethod); } }
 
         /// <summary>
         /// Initializes the hashing algorithm
@@ -1008,8 +1073,8 @@ namespace FasterHashing
 
             return null;
         }
-
     }
+
 
     /// <summary>
     /// Implementation of the MD5 hash algorithm, using OpenSSL 1.0
@@ -1044,6 +1109,16 @@ namespace FasterHashing
 
             m_size = InteropOpenSSL11.EVP_MD_size(m_digestmethod);
         }
+
+        /// <summary>
+        /// Gets the size of the message digest in bytes
+        /// </summary>
+        public override int OutputBlockSize { get { return m_size; } }
+
+        /// <summary>
+        /// Gets the size of the message digest in bytes
+        /// </summary>
+        public override int InputBlockSize { get { return InteropOpenSSL11.EVP_MD_block_size(m_digestmethod); } }
 
         /// <summary>
         /// Initializes the hashing algorithm
@@ -1137,9 +1212,8 @@ namespace FasterHashing
 
             base.Dispose(disposing);
         }
-
-
     }
+
 
     /// <summary>
     /// Implementation of the SHA1 hash algorithm, using OpenSSL 1.0
@@ -1174,6 +1248,16 @@ namespace FasterHashing
 
             m_size = InteropOpenSSL11.EVP_MD_size(m_digestmethod);
         }
+
+        /// <summary>
+        /// Gets the size of the message digest in bytes
+        /// </summary>
+        public override int OutputBlockSize { get { return m_size; } }
+
+        /// <summary>
+        /// Gets the size of the message digest in bytes
+        /// </summary>
+        public override int InputBlockSize { get { return InteropOpenSSL11.EVP_MD_block_size(m_digestmethod); } }
 
         /// <summary>
         /// Initializes the hashing algorithm
@@ -1267,9 +1351,8 @@ namespace FasterHashing
 
             base.Dispose(disposing);
         }
-
-
     }
+
 
     /// <summary>
     /// Implementation of the SHA256 hash algorithm, using OpenSSL 1.0
@@ -1304,6 +1387,16 @@ namespace FasterHashing
 
             m_size = InteropOpenSSL11.EVP_MD_size(m_digestmethod);
         }
+
+        /// <summary>
+        /// Gets the size of the message digest in bytes
+        /// </summary>
+        public override int OutputBlockSize { get { return m_size; } }
+
+        /// <summary>
+        /// Gets the size of the message digest in bytes
+        /// </summary>
+        public override int InputBlockSize { get { return InteropOpenSSL11.EVP_MD_block_size(m_digestmethod); } }
 
         /// <summary>
         /// Initializes the hashing algorithm
@@ -1397,9 +1490,8 @@ namespace FasterHashing
 
             base.Dispose(disposing);
         }
-
-
     }
+
 
     /// <summary>
     /// Implementation of the SHA384 hash algorithm, using OpenSSL 1.0
@@ -1434,6 +1526,16 @@ namespace FasterHashing
 
             m_size = InteropOpenSSL11.EVP_MD_size(m_digestmethod);
         }
+
+        /// <summary>
+        /// Gets the size of the message digest in bytes
+        /// </summary>
+        public override int OutputBlockSize { get { return m_size; } }
+
+        /// <summary>
+        /// Gets the size of the message digest in bytes
+        /// </summary>
+        public override int InputBlockSize { get { return InteropOpenSSL11.EVP_MD_block_size(m_digestmethod); } }
 
         /// <summary>
         /// Initializes the hashing algorithm
@@ -1527,9 +1629,8 @@ namespace FasterHashing
 
             base.Dispose(disposing);
         }
-
-
     }
+
 
     /// <summary>
     /// Implementation of the SHA512 hash algorithm, using OpenSSL 1.0
@@ -1564,6 +1665,16 @@ namespace FasterHashing
 
             m_size = InteropOpenSSL11.EVP_MD_size(m_digestmethod);
         }
+
+        /// <summary>
+        /// Gets the size of the message digest in bytes
+        /// </summary>
+        public override int OutputBlockSize { get { return m_size; } }
+
+        /// <summary>
+        /// Gets the size of the message digest in bytes
+        /// </summary>
+        public override int InputBlockSize { get { return InteropOpenSSL11.EVP_MD_block_size(m_digestmethod); } }
 
         /// <summary>
         /// Initializes the hashing algorithm
@@ -1657,9 +1768,8 @@ namespace FasterHashing
 
             base.Dispose(disposing);
         }
-
-
     }
+
 
 
 }

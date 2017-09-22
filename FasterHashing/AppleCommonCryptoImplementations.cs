@@ -31,6 +31,16 @@ namespace FasterHashing
         }
 
         /// <summary>
+        /// Gets the size of the message digest in bytes
+        /// </summary>
+        public override int OutputBlockSize { get { return m_size; } }
+
+        /// <summary>
+        /// Gets the size of input blocks in bytes
+        /// </summary>
+        public override int InputBlockSize { get { return AppleCommonCryptoHashAlgorithm.GetBlockSize(AppleCCDigest.MD5); } }
+
+        /// <summary>
         /// Initializes the hashing algorithm
         /// </summary>
         public override void Initialize()
@@ -204,6 +214,16 @@ namespace FasterHashing
         {
             m_size = AppleCommonCryptoHashAlgorithm.GetDigestSize(AppleCCDigest.SHA1);
         }
+
+        /// <summary>
+        /// Gets the size of the message digest in bytes
+        /// </summary>
+        public override int OutputBlockSize { get { return m_size; } }
+
+        /// <summary>
+        /// Gets the size of input blocks in bytes
+        /// </summary>
+        public override int InputBlockSize { get { return AppleCommonCryptoHashAlgorithm.GetBlockSize(AppleCCDigest.SHA1); } }
 
         /// <summary>
         /// Initializes the hashing algorithm
@@ -381,6 +401,16 @@ namespace FasterHashing
         }
 
         /// <summary>
+        /// Gets the size of the message digest in bytes
+        /// </summary>
+        public override int OutputBlockSize { get { return m_size; } }
+
+        /// <summary>
+        /// Gets the size of input blocks in bytes
+        /// </summary>
+        public override int InputBlockSize { get { return AppleCommonCryptoHashAlgorithm.GetBlockSize(AppleCCDigest.SHA256); } }
+
+        /// <summary>
         /// Initializes the hashing algorithm
         /// </summary>
         public override void Initialize()
@@ -556,6 +586,16 @@ namespace FasterHashing
         }
 
         /// <summary>
+        /// Gets the size of the message digest in bytes
+        /// </summary>
+        public override int OutputBlockSize { get { return m_size; } }
+
+        /// <summary>
+        /// Gets the size of input blocks in bytes
+        /// </summary>
+        public override int InputBlockSize { get { return AppleCommonCryptoHashAlgorithm.GetBlockSize(AppleCCDigest.SHA384); } }
+
+        /// <summary>
         /// Initializes the hashing algorithm
         /// </summary>
         public override void Initialize()
@@ -729,6 +769,16 @@ namespace FasterHashing
         {
             m_size = AppleCommonCryptoHashAlgorithm.GetDigestSize(AppleCCDigest.SHA512);
         }
+
+        /// <summary>
+        /// Gets the size of the message digest in bytes
+        /// </summary>
+        public override int OutputBlockSize { get { return m_size; } }
+
+        /// <summary>
+        /// Gets the size of input blocks in bytes
+        /// </summary>
+        public override int InputBlockSize { get { return AppleCommonCryptoHashAlgorithm.GetBlockSize(AppleCCDigest.SHA512); } }
 
         /// <summary>
         /// Initializes the hashing algorithm

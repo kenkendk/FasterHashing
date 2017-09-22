@@ -57,10 +57,18 @@ namespace FasterHashing
             /// <summary>
             /// Gets the digest size for a given algoritm
             /// </summary>
-            /// <returns>The igest get output size.</returns>
+            /// <returns>The digest output size.</returns>
             /// <param name="algorithm">Algorithm.</param>
 			[DllImport(DLLNAME, CallingConvention = CallingConvention.Cdecl, SetLastError = true)]
             public static extern IntPtr CCDigestGetOutputSize(AppleCCDigest algorithm);
+
+            /// <summary>
+            /// Gets the input block size for a given algoritm
+            /// </summary>
+            /// <returns>The input block size.</returns>
+            /// <param name="algorithm">Algorithm.</param>
+            [DllImport(DLLNAME, CallingConvention = CallingConvention.Cdecl, SetLastError = true)]
+            public static extern IntPtr CCDigestGetBlockSize(AppleCCDigest algorithm);
         }
 
         /// <summary>
@@ -73,11 +81,21 @@ namespace FasterHashing
             return (int)Interop.CCDigestGetOutputSize(AppleCCDigest.SHA256).ToInt64();
         }
 
-        /// <summary>
-        /// Gets a value indicating if CommonCrypto is supported on this system
-        /// </summary>
-        /// <value><c>true</c> if is supported; otherwise, <c>false</c>.</value>
-        public static bool IsSupported
+		/// <summary>
+		/// Gets the input block size in bytes for the given algorithm
+		/// </summary>
+		/// <returns>The input block size size.</returns>
+		/// <param name="algorithm">The algorithm to get the size for.</param>
+		internal static int GetBlockSize(AppleCCDigest algorithm)
+		{
+            return (int)Interop.CCDigestGetBlockSize(AppleCCDigest.SHA256).ToInt64();
+		}
+
+		/// <summary>
+		/// Gets a value indicating if CommonCrypto is supported on this system
+		/// </summary>
+		/// <value><c>true</c> if is supported; otherwise, <c>false</c>.</value>
+		public static bool IsSupported
         {
             get
             {

@@ -40,6 +40,16 @@ namespace FasterHashing
         }
 
         /// <summary>
+        /// Gets the size of the message digest in bytes
+        /// </summary>
+        public override int OutputBlockSize { get { return m_size; } }
+
+        /// <summary>
+        /// Gets the size of input blocks in bytes
+        /// </summary>
+        public override int InputBlockSize { get { return AppleCommonCryptoHashAlgorithm.GetBlockSize(AppleCCDigest.<#= alg #>); } }
+
+        /// <summary>
         /// Initializes the hashing algorithm
         /// </summary>
         public override void Initialize()

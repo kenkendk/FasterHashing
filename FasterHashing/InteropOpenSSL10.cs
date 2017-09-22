@@ -91,6 +91,14 @@ namespace FasterHashing
 		[DllImport(DLLNAME, CallingConvention = CallingConvention.Cdecl, SetLastError = true)]
 		public extern static int EVP_MD_size(IntPtr md);
 
+		/// <summary>
+		/// Gets the size of the input blocks
+		/// </summary>
+		/// <returns>The input block size.</returns>
+		/// <param name="md">The digest implementation.</param>
+		[DllImport(DLLNAME, CallingConvention = CallingConvention.Cdecl, SetLastError = true)]
+		public extern static int EVP_MD_block_size(IntPtr md);
+
         /// <summary>
         /// Loads all known digest methods, should be called on initialization
         /// </summary>

@@ -93,6 +93,14 @@ namespace FasterHashing
 		public extern static int EVP_MD_size(IntPtr md);
 
 		/// <summary>
+		/// Gets the size of the input blocks
+		/// </summary>
+		/// <returns>The input block size.</returns>
+		/// <param name="md">The digest implementation.</param>
+		[DllImport(DLLNAME, CallingConvention = CallingConvention.Cdecl, SetLastError = true)]
+		public extern static int EVP_MD_block_size(IntPtr md);
+
+		/// <summary>
 		/// Gets the string representation of the SSL library version
 		/// </summary>
 		/// <returns>A const char* with the SSL version.</returns>
