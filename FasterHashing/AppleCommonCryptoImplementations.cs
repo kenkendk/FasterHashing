@@ -129,7 +129,7 @@ namespace FasterHashing
             /// <summary>
             /// The library implementing Apple's CommonCrypto
             /// </summary>
-            private const string DLLNAME = "System.dylib";
+            private const string DLLNAME = "System";
 
             /// <summary>
             /// The size of the struct we allocate.
@@ -304,7 +304,7 @@ namespace FasterHashing
             /// <summary>
             /// The library implementing Apple's CommonCrypto
             /// </summary>
-            private const string DLLNAME = "System.dylib";
+            private const string DLLNAME = "System";
 
             /// <summary>
             /// The size of the struct we allocate.
@@ -479,7 +479,7 @@ namespace FasterHashing
             /// <summary>
             /// The library implementing Apple's CommonCrypto
             /// </summary>
-            private const string DLLNAME = "System.dylib";
+            private const string DLLNAME = "System";
 
             /// <summary>
             /// The size of the struct we allocate.
@@ -654,7 +654,7 @@ namespace FasterHashing
             /// <summary>
             /// The library implementing Apple's CommonCrypto
             /// </summary>
-            private const string DLLNAME = "System.dylib";
+            private const string DLLNAME = "System";
 
             /// <summary>
             /// The size of the struct we allocate.
@@ -829,7 +829,7 @@ namespace FasterHashing
             /// <summary>
             /// The library implementing Apple's CommonCrypto
             /// </summary>
-            private const string DLLNAME = "System.dylib";
+            private const string DLLNAME = "System";
 
             /// <summary>
             /// The size of the struct we allocate.

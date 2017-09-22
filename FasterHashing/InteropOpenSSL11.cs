@@ -9,9 +9,9 @@ namespace FasterHashing
 	internal static class InteropOpenSSL11
     {
 		/// <summary>
-        /// The library implementing OpenSSL (automatically uses .so or .dylib)
+        /// The library implementing OpenSSL (automatically uses .dll, .so, or .dylib)
 		/// </summary>
-		private const string DLLNAME = "libssl.dll";
+		private const string DLLNAME = "libssl";
 
 		/// <summary>
 		/// Initializes the message digest context with the hashing method
