@@ -58,6 +58,12 @@ namespace FasterHashing
 
                 return _implementation;
             }
+            set
+            {
+                if (value == HashImplementation.Any)
+                    throw new ArgumentException($"Cannot set {nameof(PreferedImplementation)} to {nameof(HashImplementation.Any)}");
+                _implementation = value;
+            }
         }
 
         /// <summary>
