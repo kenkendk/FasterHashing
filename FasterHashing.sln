@@ -31,6 +31,6 @@ Global
 		{B24C55C3-4BC1-4C25-8E62-E0A25C5761FB}.Debug|x64.Build.0 = Debug|x64
 	EndGlobalSection
 	GlobalSection(MonoDevelopProperties) = preSolution
-		version = 1.0
+		version = 1.1
 	EndGlobalSection
 EndGlobal
