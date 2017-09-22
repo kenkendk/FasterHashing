@@ -60,3 +60,15 @@ public static void Main(string[] args)
 }
 
 ```
+
+# Configure on Linux
+Some Linux distros do not have a `/lib/libssl.so` symlink, but only the fully versioned file `/lib/libssl.so.1.0.0`.
+Due to the way Mono probes for libraries, it will not pick up the fully versioned filename.
+
+There are two ways to fix this:
+1. Make a symlink in `/lib/libssl.so` that points to the fully versioned filename.
+2. Use an [assembly config file](https://github.com/kenkendk/FasterHashing/blob/master/FasterHashing.dll.config) that remaps to the correct filename.
+
+Option (1) is the simplest, but may require root access.
+
+Option (2) only requires that you add a separate file to the folder where `FasterHashing.dll` is located, and put in the correct filename. You can probably copy the [example assembly config file](https://github.com/kenkendk/FasterHashing/blob/master/FasterHashing.dll.config) directly into the target folder.
