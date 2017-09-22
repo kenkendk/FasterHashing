@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Runtime.InteropServices;
 using System.Security.Cryptography;
 
@@ -216,6 +217,22 @@ namespace FasterHashing
         }
 
         /// <summary>
+        /// Gets all supported hash implementations
+        /// </summary>
+        /// <value>The supported implementations.</value>
+        public static IEnumerable<HashImplementation> SupportedImplementations
+        {
+            get
+            {
+                return Enum.GetValues(typeof(HashImplementation))
+                    .OfType<HashImplementation>()
+                    .Where(x => x != HashImplementation.Any)
+                    .Where(x => SupportsImplementation(x));
+
+			}
+        }
+
+        /// <summary>
         /// Returns a value indicating if the specific implementation is supported on this system
         /// </summary>
         /// <returns><c>true</c>, if implementation was supportsed, <c>false</c> otherwise.</returns>
@@ -237,6 +254,77 @@ namespace FasterHashing
 			}
 
             return false;
+		}
+
+        /// <summary>
+        /// Performs a measurement for the number of hashes pr second for the given algorithm and implementation
+        /// </summary>
+        /// <returns>The number of hashes pr second.</returns>
+        /// <param name="algorithm">The algorithm to test with.</param>
+        /// <param name="implementation">The implementation to test.</param>
+        /// <param name="blocksize">The size of the blocks being hashed.</param>
+        /// <param name="hashesprround">The number of hashes between each time check.</param>
+        /// <param name="measureseconds">The number of seconds to measure.</param>
+        public static long TestHashesPrSecond(string algorithm = "SHA256", HashImplementation implementation = HashImplementation.Any, int blocksize = 102400, int hashesprround = 1000, float measureseconds = 2f)
+        {
+            using (var alg = Create(algorithm, false, implementation))
+            {
+                if (alg == null)
+                    return 0;
+
+                var st = DateTime.Now;
+                var target = st.Ticks + TimeSpan.FromSeconds(measureseconds).Ticks;
+
+                var buffer = new byte[blocksize];
+                var performed = 0L;
+
+                alg.Initialize();
+                while (DateTime.Now.Ticks < target)
+                {
+                    for (var i = 0; i < hashesprround; i++)
+                        alg.TransformBlock(buffer, 0, buffer.Length, buffer, 0);
+                    performed++;
+                }
+
+                alg.TransformFinalBlock(buffer, 0, 0);
+                var elapsed = DateTime.Now - st;
+
+                return (long)((performed * hashesprround * (blocksize / 64)) / elapsed.TotalSeconds);
+            }
+        }
+
+		/// <summary>
+		/// Performs a measurement for the number of hashes pr second for the given algorithm and all supported implementations
+		/// </summary>
+		/// <returns>The number of hashes pr second for each implementation.</returns>
+		/// <param name="algorithm">The algorithm to test with.</param>
+		/// <param name="blocksize">The size of the blocks being hashed.</param>
+		/// <param name="hashesprround">The number of hashes between each time check.</param>
+		/// <param name="measureseconds">The number of seconds to measure.</param>
+		public static IEnumerable<Tuple<HashImplementation, long>> MeasureImplementations(string algorithm = "SHA256", int blocksize = 102400, int hashesprround = 1000, float measureseconds = 2f)
+        {
+            return
+                SupportedImplementations
+                    .Select(x => new Tuple<HashImplementation, long>(x, TestHashesPrSecond(algorithm, x, blocksize, hashesprround, measureseconds)));
+        }
+
+		/// <summary>
+		/// Measures all supported implementations and picks the fastest
+		/// </summary>
+		/// <param name="algorithm">The algorithm to test with.</param>
+		/// <param name="blocksize">The size of the blocks being hashed.</param>
+		/// <param name="hashesprround">The number of hashes between each time check.</param>
+		/// <param name="measureseconds">The number of seconds to measure.</param>
+		public static void SetDefaultImplementationToFastest(string algorithm = "SHA256", int blocksize = 102400, int hashesprround = 1000, float measureseconds = 2f)
+        {
+            if (SupportedImplementations.Count() == 1)
+                PreferedImplementation = SupportedImplementations.First();
+            else
+                PreferedImplementation =
+                    MeasureImplementations(algorithm, blocksize, hashesprround, measureseconds)
+                        .OrderByDescending(x => x.Item2)
+                        .Select(x => x.Item1)
+                        .First();
 		}
 
 	}
