@@ -1,0 +1,193 @@
+﻿﻿<#@ template language="C#" #>
+<#@ assembly name="System.Core" #>
+<#@ import namespace="System.Linq" #>
+<#@ import namespace="System.Text" #>
+<#@ import namespace="System.Collections.Generic" #>
+using System;
+using System.ComponentModel;
+using System.Runtime.InteropServices;
+using System.Security.Cryptography;
+
+namespace FasterHashing
+{
+<# 
+  var libs = new[] { "OpenSSL10", "OpenSSL11" };
+  var algs = new[] { null, "MD5", "SHA1", "SHA256", "SHA384", "SHA512" };
+
+  foreach(var lib in libs) {
+  foreach(var alg in algs) {
+    var destroy = lib == "OpenSSL10" ? "destroy" : "free";
+    var cleanup = lib == "OpenSSL10" ? "cleanup" : "reset";
+    var create = lib == "OpenSSL10" ? "create" : "new";
+
+#>
+    /// <summary>
+    /// Implementation of <#= alg == null ? "a" : "the " + alg #> hash algorithm, using OpenSSL 1.0
+    /// </summary>
+    public class <#= lib #>HashAlgorithm<#= alg ?? "" #> : <#= alg ?? "HashAlgorithm" #>
+    {
+<# if (lib == "OpenSSL10") { #>
+        /// <summary>
+        /// Flag to toggle calling &quot;OpenSSL_add_all_digests()&quot;
+        /// </summary>
+        public static bool _first = true;
+<# } #>
+
+        /// <summary>
+        /// The message digest context
+        /// </summary>
+        private IntPtr m_context;
+
+        /// <summary>
+        /// The size of the message digest
+        /// </summary>
+        private readonly int m_size;
+        /// <summary>
+        /// The message digest method
+        /// </summary>
+        private readonly IntPtr m_digestmethod;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="T:FasterHashing.<#= lib #>HashAlgorithm<#= alg ?? "" #>"/> class.
+        /// </summary>
+        <# if (alg == null) { #>
+/// <param name="algorithm">The name of the hash algorithm to use.</param>
+<# } #>
+        public <#= lib #>HashAlgorithm<#= alg ?? "" #>(<# if (alg == null) { #>string algorithm<# } #>)
+        {
+<# if (lib == "OpenSSL10") { #>
+            if (_first)
+            {
+                Interop<#= lib #>.OpenSSL_add_all_digests();
+                _first = false;
+            }
+<# } #>
+
+<# if (alg != null) { #>
+           var algorithm = "<#= alg #>";
+<# } #>
+            m_digestmethod = Interop<#= lib #>.EVP_get_digestbyname(algorithm);
+            if (m_digestmethod == IntPtr.Zero)
+                throw new ArgumentException($"No such algorithm: {algorithm}");
+
+            m_size = Interop<#= lib #>.EVP_MD_size(m_digestmethod);
+        }
+
+        /// <summary>
+        /// Initializes the hashing algorithm
+        /// </summary>
+        public override void Initialize()
+        {
+            if (m_context != IntPtr.Zero)
+                Interop<#= lib #>.EVP_MD_CTX_<#= cleanup #>(m_context);
+            else
+                m_context = Interop<#= lib #>.EVP_MD_CTX_<#= create #>();
+
+            if (Interop<#= lib #>.EVP_DigestInit_ex(m_context, m_digestmethod, IntPtr.Zero) != 1)
+                throw new Win32Exception(Marshal.GetLastWin32Error());
+        }
+
+        /// <summary>
+        /// Performs the core hashing
+        /// </summary>
+        /// <param name="array">The data to hash.</param>
+        /// <param name="ibStart">The index into the array where hashing starts.</param>
+        /// <param name="cbSize">The number of bytes to hash.</param>
+        protected override void HashCore(byte[] array, int ibStart, int cbSize)
+        {
+            if (m_context == IntPtr.Zero)
+                Initialize();
+
+            // Common case is to use offset=0, and here we can rely on the system marshaller to work
+            if (ibStart == 0)
+            {
+                if (Interop<#= lib #>.EVP_DigestUpdate(m_context, array, (uint)cbSize) != 1)
+                    throw new Win32Exception(Marshal.GetLastWin32Error());
+            }
+            // For small chunks, we can copy and get mostly the same performance as the managed version
+            else if (cbSize < 1024)
+            {
+                System.Diagnostics.Trace.WriteLineIf(!ErrorStateHelper.HasReportedOffsetIssue, "Warning, using arrays with non-zero offset provides significantly slower hashing performance");
+                ErrorStateHelper.HasReportedOffsetIssue = true;
+
+                var tmp = new byte[cbSize];
+                Array.Copy(array, ibStart, tmp, 0, cbSize);
+                if (Interop<#= lib #>.EVP_DigestUpdate(m_context, array, (uint)cbSize) != 1)
+                    throw new Win32Exception(Marshal.GetLastWin32Error());
+            }
+            // Otherwise, the fastest is obtaining a pinned pointer and adding the offset to that
+            else
+            {
+                System.Diagnostics.Trace.WriteLineIf(!ErrorStateHelper.HasReportedOffsetIssue, "Warning, using arrays with non-zero offset provides significantly slower hashing performance");
+                ErrorStateHelper.HasReportedOffsetIssue = true;
+                var pa = GCHandle.Alloc(array, GCHandleType.Pinned);
+                var res = Interop<#= lib #>.EVP_DigestUpdate(m_context, Marshal.UnsafeAddrOfPinnedArrayElement(array, ibStart), (uint)cbSize);
+                pa.Free();
+                if (res != 1)
+                   throw new Win32Exception(Marshal.GetLastWin32Error());
+           }
+        }
+
+        /// <summary>
+        /// Computes the final hash and returns the result
+        /// </summary>
+        /// <returns>The final messge digest.</returns>
+        protected override byte[] HashFinal()
+        {
+            var res = new byte[m_size];
+            var rs = (uint)m_size;
+            if (Interop<#= lib #>.EVP_DigestFinal_ex(m_context, res, ref rs) != 1)
+                throw new Win32Exception(Marshal.GetLastWin32Error());
+
+            return res;
+        }
+
+        /// <summary>
+        /// Releases unmanaged resources and performs other cleanup operations before the
+        /// <see cref="T:FasterHashing.<#= lib #>HashAlgorithm<#= alg ?? "" #>"/> is reclaimed by garbage collection.
+        /// </summary>
+        ~<#= lib #>HashAlgorithm<#= alg ?? "" #>()
+        {
+            Dispose(false);
+        }
+
+        /// <summary>
+        /// Dispose the this instance.
+        /// </summary>
+        /// <param name="disposing">If set to <c>true</c> this is called from <see cref="Dispose"/>.</param>
+        protected override void Dispose(bool disposing)
+        {
+            if (m_context != IntPtr.Zero)
+            {
+                Interop<#= lib #>.EVP_MD_CTX_<#= destroy #>(m_context);
+                m_context = IntPtr.Zero;
+            }
+
+            base.Dispose(disposing);
+        }
+
+<# if (alg == null) { #>
+        /// <summary>
+        /// Creates a new hash algorithm using an <#= lib #> implementation
+        /// </summary>
+        /// <param name-"name">The name of the algorithm to create</param>
+        public static new HashAlgorithm Create(string name)
+        {
+<# foreach(var x in algs.Where(x => x != null)) { #>
+            if (string.Equals("<#= x #>", name, StringComparison.OrdinalIgnoreCase))
+                return new <#= lib #>HashAlgorithm<#= x #>();
+<# } #>
+            try { return new <#= lib #>HashAlgorithm(name); }
+            catch { }
+
+            return null;
+        }
+<# } #>
+
+    }
+
+<# } #>
+<# } #>
+
+}
+

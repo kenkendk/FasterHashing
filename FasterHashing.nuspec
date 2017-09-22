@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<package >
+  <metadata>
+    <id>FasterHashing</id>
+    <version>1.0</version>
+    <title>FasterHashing</title>
+    <authors>Kenneth Skovhede</authors>
+    <owners>Kenneth Skovhede</owners>
+    <licenseUrl>https://github.com/kenkendk/FasterHashing/blob/master/LICENSE</licenseUrl>
+    <projectUrl>https://github.com/kenkendk/FasterHashing</projectUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>FasterHashing library</description>
+    <releaseNotes>Initial release.</releaseNotes>
+    <copyright>Copyright 2017, Kenneth Skovhede</copyright>
+    <tags>Hashing MD5 SHA1 SHA256 SHA384 SHA512</tags>
+  </metadata>
+  <files>
+    <file src="FasterHashing/bin/Release/FasterHashing.dll" target="lib/net45" />
+  </files>
+</package>
