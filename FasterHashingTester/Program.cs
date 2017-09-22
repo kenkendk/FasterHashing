@@ -16,9 +16,13 @@ namespace FasterHashingTester
             Console.WriteLine("Performing tests with non-zero offsets");
             TestWithOffset();
 
-            Console.WriteLine("Testing performance");
-            foreach (var n in MeasureSpeeds())
-                Console.WriteLine("{0, 10} {1}", n.Item1, n.Item2);
+            Console.WriteLine("Testing performance with 64b block");
+            foreach (var n in FasterHashing.FasterHash.MeasureImplementations("SHA256", 64))
+                Console.WriteLine("{0, 20}:  {1} hashes/second", n.Item1, n.Item2);
+
+			Console.WriteLine("Testing performance with 100kb blocks");
+			foreach (var n in FasterHashing.FasterHash.MeasureImplementations("SHA256", 102400))
+                Console.WriteLine("{0, 20}:  {1} hashes/second", n.Item1, n.Item2);
 
 			Console.WriteLine("Testing multithreadded execution to wiggle out any shared state problems");
 			TestThreads();
@@ -75,7 +79,7 @@ namespace FasterHashingTester
 				}
 		}
 
-        private static Tuple<string, TimeSpan>[] MeasureSpeeds()
+        private static Tuple<string, TimeSpan>[] MeasureSpeeds(int seed = 42, int blocksize = 64)
         {
             return
                 Enum.GetValues(typeof(FasterHashing.HashImplementation))
@@ -86,20 +90,20 @@ namespace FasterHashingTester
                     {
                         var s = DateTime.Now;
                         using (var alg = FasterHashing.FasterHash.Create("SHA256", false, x))
-                            PerformanceTest(alg);
+                            PerformanceTest(alg, seed, blocksize);
 
                         return new Tuple<string, TimeSpan>(x.ToString(), DateTime.Now - s);
                     })
                     .ToArray();
         }
 
-        private static byte[] PerformanceTest(System.Security.Cryptography.HashAlgorithm alg, int seed = 42)
+        private static byte[] PerformanceTest(System.Security.Cryptography.HashAlgorithm alg, int seed = 42, int blocksize = 64)
         {
-            var block = new byte[alg.InputBlockSize];
+            var block = new byte[blocksize];
             new Random(seed).NextBytes(block);
-
+               
             alg.Initialize();
-            foreach (var n in Enumerable.Range(0, 10000000))
+            foreach (var n in Enumerable.Range(0, 1000000))
                 alg.TransformBlock(block, 0, block.Length, block, 0);
 
             return alg.TransformFinalBlock(block, 0, 0);
