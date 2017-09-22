@@ -11,7 +11,7 @@ The problem with `HashAlgorithm.Create()` has been [fixed with the .Net Core 2 p
 Unfortunately, the implementation for .Net Core 2 relies on a Platform Abstraction Layer, which is a glue library that links into the system libraries.
 This glue library needs to be complied for the target platform, making it difficult to deploy this with platform independent projects (i.e. using only managed code).
 
-For this reason *FasterHashing* contains only managed code. If you are using the .Net standard profile (v4.5+) you can simply add this library to your project, change the call to `HashAlgorithm.Create("SHA256")` to `FasterHash.Create("SHA256")` and obtain speedups on all supported platforms while falling back to the managed implementation if none are found.
+For this reason *FasterHashing* contains only managed code. If you are using the .Net standard profile (v4.5+) you can simply add this library to your project, change the call from `HashAlgorithm.Create("SHA256")` to `FasterHash.Create("SHA256")` and obtain speedups on all supported platforms while falling back to the managed implementation if none are found.
 
 # Installation
 The [FasterHashing NuGet package](https://www.nuget.org/packages/FasterHashing) is the recommended way of installing FasterHashing:
