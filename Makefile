@@ -7,7 +7,7 @@ VERSION=$(shell cat $(PROJECT_NAME).nuspec | grep "<version>" | tr -d "[A-z/<>] 
 build: $(PROJECT_NAME).sln $(DEPENDS_CS)
 	msbuild /p:Configuration=Release $(PROJECT_NAME).sln
 
-$(PROJECT_NAME).$(VERSION).nupkg: $(PROJECT_NAME).nuspec
+$(PROJECT_NAME).$(VERSION).nupkg: $(PROJECT_NAME).nuspec build
 	nuget pack $(PROJECT_NAME).nuspec
 
 pack: $(PROJECT_NAME).$(VERSION).nupkg build
