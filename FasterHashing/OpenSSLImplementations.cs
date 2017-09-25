@@ -89,6 +89,7 @@ namespace FasterHashing
                 if (InteropOpenSSL10.EVP_DigestUpdate(m_context, array, (uint)cbSize) != 1)
                     throw new Win32Exception(Marshal.GetLastWin32Error());
             }
+#if AVOID_PINNING_SMALL_ARRAYS
             // For small chunks, we can copy and get mostly the same performance as the managed version
             else if (cbSize < 1024)
             {
@@ -97,9 +98,10 @@ namespace FasterHashing
 
                 var tmp = new byte[cbSize];
                 Array.Copy(array, ibStart, tmp, 0, cbSize);
-                if (InteropOpenSSL10.EVP_DigestUpdate(m_context, array, (uint)cbSize) != 1)
+                if (InteropOpenSSL10.EVP_DigestUpdate(m_context, tmp, (uint)cbSize) != 1)
                     throw new Win32Exception(Marshal.GetLastWin32Error());
             }
+#endif
             // Otherwise, the fastest is obtaining a pinned pointer and adding the offset to that
             else
             {
@@ -202,7 +204,7 @@ namespace FasterHashing
         /// <summary>
         /// Initializes a new instance of the <see cref="T:FasterHashing.OpenSSL10HashAlgorithmMD5"/> class.
         /// </summary>
-                public OpenSSL10HashAlgorithmMD5()
+        public OpenSSL10HashAlgorithmMD5()
         {
             if (_first)
             {
@@ -259,6 +261,7 @@ namespace FasterHashing
                 if (InteropOpenSSL10.EVP_DigestUpdate(m_context, array, (uint)cbSize) != 1)
                     throw new Win32Exception(Marshal.GetLastWin32Error());
             }
+#if AVOID_PINNING_SMALL_ARRAYS
             // For small chunks, we can copy and get mostly the same performance as the managed version
             else if (cbSize < 1024)
             {
@@ -267,9 +270,10 @@ namespace FasterHashing
 
                 var tmp = new byte[cbSize];
                 Array.Copy(array, ibStart, tmp, 0, cbSize);
-                if (InteropOpenSSL10.EVP_DigestUpdate(m_context, array, (uint)cbSize) != 1)
+                if (InteropOpenSSL10.EVP_DigestUpdate(m_context, tmp, (uint)cbSize) != 1)
                     throw new Win32Exception(Marshal.GetLastWin32Error());
             }
+#endif
             // Otherwise, the fastest is obtaining a pinned pointer and adding the offset to that
             else
             {
@@ -350,7 +354,7 @@ namespace FasterHashing
         /// <summary>
         /// Initializes a new instance of the <see cref="T:FasterHashing.OpenSSL10HashAlgorithmSHA1"/> class.
         /// </summary>
-                public OpenSSL10HashAlgorithmSHA1()
+        public OpenSSL10HashAlgorithmSHA1()
         {
             if (_first)
             {
@@ -407,6 +411,7 @@ namespace FasterHashing
                 if (InteropOpenSSL10.EVP_DigestUpdate(m_context, array, (uint)cbSize) != 1)
                     throw new Win32Exception(Marshal.GetLastWin32Error());
             }
+#if AVOID_PINNING_SMALL_ARRAYS
             // For small chunks, we can copy and get mostly the same performance as the managed version
             else if (cbSize < 1024)
             {
@@ -415,9 +420,10 @@ namespace FasterHashing
 
                 var tmp = new byte[cbSize];
                 Array.Copy(array, ibStart, tmp, 0, cbSize);
-                if (InteropOpenSSL10.EVP_DigestUpdate(m_context, array, (uint)cbSize) != 1)
+                if (InteropOpenSSL10.EVP_DigestUpdate(m_context, tmp, (uint)cbSize) != 1)
                     throw new Win32Exception(Marshal.GetLastWin32Error());
             }
+#endif
             // Otherwise, the fastest is obtaining a pinned pointer and adding the offset to that
             else
             {
@@ -498,7 +504,7 @@ namespace FasterHashing
         /// <summary>
         /// Initializes a new instance of the <see cref="T:FasterHashing.OpenSSL10HashAlgorithmSHA256"/> class.
         /// </summary>
-                public OpenSSL10HashAlgorithmSHA256()
+        public OpenSSL10HashAlgorithmSHA256()
         {
             if (_first)
             {
@@ -555,6 +561,7 @@ namespace FasterHashing
                 if (InteropOpenSSL10.EVP_DigestUpdate(m_context, array, (uint)cbSize) != 1)
                     throw new Win32Exception(Marshal.GetLastWin32Error());
             }
+#if AVOID_PINNING_SMALL_ARRAYS
             // For small chunks, we can copy and get mostly the same performance as the managed version
             else if (cbSize < 1024)
             {
@@ -563,9 +570,10 @@ namespace FasterHashing
 
                 var tmp = new byte[cbSize];
                 Array.Copy(array, ibStart, tmp, 0, cbSize);
-                if (InteropOpenSSL10.EVP_DigestUpdate(m_context, array, (uint)cbSize) != 1)
+                if (InteropOpenSSL10.EVP_DigestUpdate(m_context, tmp, (uint)cbSize) != 1)
                     throw new Win32Exception(Marshal.GetLastWin32Error());
             }
+#endif
             // Otherwise, the fastest is obtaining a pinned pointer and adding the offset to that
             else
             {
@@ -646,7 +654,7 @@ namespace FasterHashing
         /// <summary>
         /// Initializes a new instance of the <see cref="T:FasterHashing.OpenSSL10HashAlgorithmSHA384"/> class.
         /// </summary>
-                public OpenSSL10HashAlgorithmSHA384()
+        public OpenSSL10HashAlgorithmSHA384()
         {
             if (_first)
             {
@@ -703,6 +711,7 @@ namespace FasterHashing
                 if (InteropOpenSSL10.EVP_DigestUpdate(m_context, array, (uint)cbSize) != 1)
                     throw new Win32Exception(Marshal.GetLastWin32Error());
             }
+#if AVOID_PINNING_SMALL_ARRAYS
             // For small chunks, we can copy and get mostly the same performance as the managed version
             else if (cbSize < 1024)
             {
@@ -711,9 +720,10 @@ namespace FasterHashing
 
                 var tmp = new byte[cbSize];
                 Array.Copy(array, ibStart, tmp, 0, cbSize);
-                if (InteropOpenSSL10.EVP_DigestUpdate(m_context, array, (uint)cbSize) != 1)
+                if (InteropOpenSSL10.EVP_DigestUpdate(m_context, tmp, (uint)cbSize) != 1)
                     throw new Win32Exception(Marshal.GetLastWin32Error());
             }
+#endif
             // Otherwise, the fastest is obtaining a pinned pointer and adding the offset to that
             else
             {
@@ -794,7 +804,7 @@ namespace FasterHashing
         /// <summary>
         /// Initializes a new instance of the <see cref="T:FasterHashing.OpenSSL10HashAlgorithmSHA512"/> class.
         /// </summary>
-                public OpenSSL10HashAlgorithmSHA512()
+        public OpenSSL10HashAlgorithmSHA512()
         {
             if (_first)
             {
@@ -851,6 +861,7 @@ namespace FasterHashing
                 if (InteropOpenSSL10.EVP_DigestUpdate(m_context, array, (uint)cbSize) != 1)
                     throw new Win32Exception(Marshal.GetLastWin32Error());
             }
+#if AVOID_PINNING_SMALL_ARRAYS
             // For small chunks, we can copy and get mostly the same performance as the managed version
             else if (cbSize < 1024)
             {
@@ -859,9 +870,10 @@ namespace FasterHashing
 
                 var tmp = new byte[cbSize];
                 Array.Copy(array, ibStart, tmp, 0, cbSize);
-                if (InteropOpenSSL10.EVP_DigestUpdate(m_context, array, (uint)cbSize) != 1)
+                if (InteropOpenSSL10.EVP_DigestUpdate(m_context, tmp, (uint)cbSize) != 1)
                     throw new Win32Exception(Marshal.GetLastWin32Error());
             }
+#endif
             // Otherwise, the fastest is obtaining a pinned pointer and adding the offset to that
             else
             {
@@ -990,6 +1002,7 @@ namespace FasterHashing
                 if (InteropOpenSSL11.EVP_DigestUpdate(m_context, array, (uint)cbSize) != 1)
                     throw new Win32Exception(Marshal.GetLastWin32Error());
             }
+#if AVOID_PINNING_SMALL_ARRAYS
             // For small chunks, we can copy and get mostly the same performance as the managed version
             else if (cbSize < 1024)
             {
@@ -998,9 +1011,10 @@ namespace FasterHashing
 
                 var tmp = new byte[cbSize];
                 Array.Copy(array, ibStart, tmp, 0, cbSize);
-                if (InteropOpenSSL11.EVP_DigestUpdate(m_context, array, (uint)cbSize) != 1)
+                if (InteropOpenSSL11.EVP_DigestUpdate(m_context, tmp, (uint)cbSize) != 1)
                     throw new Win32Exception(Marshal.GetLastWin32Error());
             }
+#endif
             // Otherwise, the fastest is obtaining a pinned pointer and adding the offset to that
             else
             {
@@ -1099,7 +1113,7 @@ namespace FasterHashing
         /// <summary>
         /// Initializes a new instance of the <see cref="T:FasterHashing.OpenSSL11HashAlgorithmMD5"/> class.
         /// </summary>
-                public OpenSSL11HashAlgorithmMD5()
+        public OpenSSL11HashAlgorithmMD5()
         {
 
            var algorithm = "MD5";
@@ -1151,6 +1165,7 @@ namespace FasterHashing
                 if (InteropOpenSSL11.EVP_DigestUpdate(m_context, array, (uint)cbSize) != 1)
                     throw new Win32Exception(Marshal.GetLastWin32Error());
             }
+#if AVOID_PINNING_SMALL_ARRAYS
             // For small chunks, we can copy and get mostly the same performance as the managed version
             else if (cbSize < 1024)
             {
@@ -1159,9 +1174,10 @@ namespace FasterHashing
 
                 var tmp = new byte[cbSize];
                 Array.Copy(array, ibStart, tmp, 0, cbSize);
-                if (InteropOpenSSL11.EVP_DigestUpdate(m_context, array, (uint)cbSize) != 1)
+                if (InteropOpenSSL11.EVP_DigestUpdate(m_context, tmp, (uint)cbSize) != 1)
                     throw new Win32Exception(Marshal.GetLastWin32Error());
             }
+#endif
             // Otherwise, the fastest is obtaining a pinned pointer and adding the offset to that
             else
             {
@@ -1238,7 +1254,7 @@ namespace FasterHashing
         /// <summary>
         /// Initializes a new instance of the <see cref="T:FasterHashing.OpenSSL11HashAlgorithmSHA1"/> class.
         /// </summary>
-                public OpenSSL11HashAlgorithmSHA1()
+        public OpenSSL11HashAlgorithmSHA1()
         {
 
            var algorithm = "SHA1";
@@ -1290,6 +1306,7 @@ namespace FasterHashing
                 if (InteropOpenSSL11.EVP_DigestUpdate(m_context, array, (uint)cbSize) != 1)
                     throw new Win32Exception(Marshal.GetLastWin32Error());
             }
+#if AVOID_PINNING_SMALL_ARRAYS
             // For small chunks, we can copy and get mostly the same performance as the managed version
             else if (cbSize < 1024)
             {
@@ -1298,9 +1315,10 @@ namespace FasterHashing
 
                 var tmp = new byte[cbSize];
                 Array.Copy(array, ibStart, tmp, 0, cbSize);
-                if (InteropOpenSSL11.EVP_DigestUpdate(m_context, array, (uint)cbSize) != 1)
+                if (InteropOpenSSL11.EVP_DigestUpdate(m_context, tmp, (uint)cbSize) != 1)
                     throw new Win32Exception(Marshal.GetLastWin32Error());
             }
+#endif
             // Otherwise, the fastest is obtaining a pinned pointer and adding the offset to that
             else
             {
@@ -1377,7 +1395,7 @@ namespace FasterHashing
         /// <summary>
         /// Initializes a new instance of the <see cref="T:FasterHashing.OpenSSL11HashAlgorithmSHA256"/> class.
         /// </summary>
-                public OpenSSL11HashAlgorithmSHA256()
+        public OpenSSL11HashAlgorithmSHA256()
         {
 
            var algorithm = "SHA256";
@@ -1429,6 +1447,7 @@ namespace FasterHashing
                 if (InteropOpenSSL11.EVP_DigestUpdate(m_context, array, (uint)cbSize) != 1)
                     throw new Win32Exception(Marshal.GetLastWin32Error());
             }
+#if AVOID_PINNING_SMALL_ARRAYS
             // For small chunks, we can copy and get mostly the same performance as the managed version
             else if (cbSize < 1024)
             {
@@ -1437,9 +1456,10 @@ namespace FasterHashing
 
                 var tmp = new byte[cbSize];
                 Array.Copy(array, ibStart, tmp, 0, cbSize);
-                if (InteropOpenSSL11.EVP_DigestUpdate(m_context, array, (uint)cbSize) != 1)
+                if (InteropOpenSSL11.EVP_DigestUpdate(m_context, tmp, (uint)cbSize) != 1)
                     throw new Win32Exception(Marshal.GetLastWin32Error());
             }
+#endif
             // Otherwise, the fastest is obtaining a pinned pointer and adding the offset to that
             else
             {
@@ -1516,7 +1536,7 @@ namespace FasterHashing
         /// <summary>
         /// Initializes a new instance of the <see cref="T:FasterHashing.OpenSSL11HashAlgorithmSHA384"/> class.
         /// </summary>
-                public OpenSSL11HashAlgorithmSHA384()
+        public OpenSSL11HashAlgorithmSHA384()
         {
 
            var algorithm = "SHA384";
@@ -1568,6 +1588,7 @@ namespace FasterHashing
                 if (InteropOpenSSL11.EVP_DigestUpdate(m_context, array, (uint)cbSize) != 1)
                     throw new Win32Exception(Marshal.GetLastWin32Error());
             }
+#if AVOID_PINNING_SMALL_ARRAYS
             // For small chunks, we can copy and get mostly the same performance as the managed version
             else if (cbSize < 1024)
             {
@@ -1576,9 +1597,10 @@ namespace FasterHashing
 
                 var tmp = new byte[cbSize];
                 Array.Copy(array, ibStart, tmp, 0, cbSize);
-                if (InteropOpenSSL11.EVP_DigestUpdate(m_context, array, (uint)cbSize) != 1)
+                if (InteropOpenSSL11.EVP_DigestUpdate(m_context, tmp, (uint)cbSize) != 1)
                     throw new Win32Exception(Marshal.GetLastWin32Error());
             }
+#endif
             // Otherwise, the fastest is obtaining a pinned pointer and adding the offset to that
             else
             {
@@ -1655,7 +1677,7 @@ namespace FasterHashing
         /// <summary>
         /// Initializes a new instance of the <see cref="T:FasterHashing.OpenSSL11HashAlgorithmSHA512"/> class.
         /// </summary>
-                public OpenSSL11HashAlgorithmSHA512()
+        public OpenSSL11HashAlgorithmSHA512()
         {
 
            var algorithm = "SHA512";
@@ -1707,6 +1729,7 @@ namespace FasterHashing
                 if (InteropOpenSSL11.EVP_DigestUpdate(m_context, array, (uint)cbSize) != 1)
                     throw new Win32Exception(Marshal.GetLastWin32Error());
             }
+#if AVOID_PINNING_SMALL_ARRAYS
             // For small chunks, we can copy and get mostly the same performance as the managed version
             else if (cbSize < 1024)
             {
@@ -1715,9 +1738,10 @@ namespace FasterHashing
 
                 var tmp = new byte[cbSize];
                 Array.Copy(array, ibStart, tmp, 0, cbSize);
-                if (InteropOpenSSL11.EVP_DigestUpdate(m_context, array, (uint)cbSize) != 1)
+                if (InteropOpenSSL11.EVP_DigestUpdate(m_context, tmp, (uint)cbSize) != 1)
                     throw new Win32Exception(Marshal.GetLastWin32Error());
             }
+#endif
             // Otherwise, the fastest is obtaining a pinned pointer and adding the offset to that
             else
             {

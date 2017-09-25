@@ -70,6 +70,7 @@ namespace FasterHashing
                 if (Interop.CC_MD5_Update(m_context, array, (CC_LONG)cbSize) != 1)
                     throw new Win32Exception(Marshal.GetLastWin32Error());
             }
+#if AVOID_PINNING_SMALL_ARRAYS
             // For small chunks, we can copy and get mostly the same performance as the managed version
             else if (cbSize < 1024)
             {
@@ -78,9 +79,10 @@ namespace FasterHashing
 
                 var tmp = new byte[cbSize];
                 Array.Copy(array, ibStart, tmp, 0, cbSize);
-                if (Interop.CC_MD5_Update(m_context, array, (CC_LONG)cbSize) != 1)
+                if (Interop.CC_MD5_Update(m_context, tmp, (CC_LONG)cbSize) != 1)
                     throw new Win32Exception(Marshal.GetLastWin32Error());
             }
+#endif
             // Otherwise, the fastest is obtaining a pinned pointer and adding the offset to that
             else
             {
@@ -255,6 +257,7 @@ namespace FasterHashing
                 if (Interop.CC_SHA1_Update(m_context, array, (CC_LONG)cbSize) != 1)
                     throw new Win32Exception(Marshal.GetLastWin32Error());
             }
+#if AVOID_PINNING_SMALL_ARRAYS
             // For small chunks, we can copy and get mostly the same performance as the managed version
             else if (cbSize < 1024)
             {
@@ -263,9 +266,10 @@ namespace FasterHashing
 
                 var tmp = new byte[cbSize];
                 Array.Copy(array, ibStart, tmp, 0, cbSize);
-                if (Interop.CC_SHA1_Update(m_context, array, (CC_LONG)cbSize) != 1)
+                if (Interop.CC_SHA1_Update(m_context, tmp, (CC_LONG)cbSize) != 1)
                     throw new Win32Exception(Marshal.GetLastWin32Error());
             }
+#endif
             // Otherwise, the fastest is obtaining a pinned pointer and adding the offset to that
             else
             {
@@ -440,6 +444,7 @@ namespace FasterHashing
                 if (Interop.CC_SHA256_Update(m_context, array, (CC_LONG)cbSize) != 1)
                     throw new Win32Exception(Marshal.GetLastWin32Error());
             }
+#if AVOID_PINNING_SMALL_ARRAYS
             // For small chunks, we can copy and get mostly the same performance as the managed version
             else if (cbSize < 1024)
             {
@@ -448,9 +453,10 @@ namespace FasterHashing
 
                 var tmp = new byte[cbSize];
                 Array.Copy(array, ibStart, tmp, 0, cbSize);
-                if (Interop.CC_SHA256_Update(m_context, array, (CC_LONG)cbSize) != 1)
+                if (Interop.CC_SHA256_Update(m_context, tmp, (CC_LONG)cbSize) != 1)
                     throw new Win32Exception(Marshal.GetLastWin32Error());
             }
+#endif
             // Otherwise, the fastest is obtaining a pinned pointer and adding the offset to that
             else
             {
@@ -625,6 +631,7 @@ namespace FasterHashing
                 if (Interop.CC_SHA384_Update(m_context, array, (CC_LONG)cbSize) != 1)
                     throw new Win32Exception(Marshal.GetLastWin32Error());
             }
+#if AVOID_PINNING_SMALL_ARRAYS
             // For small chunks, we can copy and get mostly the same performance as the managed version
             else if (cbSize < 1024)
             {
@@ -633,9 +640,10 @@ namespace FasterHashing
 
                 var tmp = new byte[cbSize];
                 Array.Copy(array, ibStart, tmp, 0, cbSize);
-                if (Interop.CC_SHA384_Update(m_context, array, (CC_LONG)cbSize) != 1)
+                if (Interop.CC_SHA384_Update(m_context, tmp, (CC_LONG)cbSize) != 1)
                     throw new Win32Exception(Marshal.GetLastWin32Error());
             }
+#endif
             // Otherwise, the fastest is obtaining a pinned pointer and adding the offset to that
             else
             {
@@ -810,6 +818,7 @@ namespace FasterHashing
                 if (Interop.CC_SHA512_Update(m_context, array, (CC_LONG)cbSize) != 1)
                     throw new Win32Exception(Marshal.GetLastWin32Error());
             }
+#if AVOID_PINNING_SMALL_ARRAYS
             // For small chunks, we can copy and get mostly the same performance as the managed version
             else if (cbSize < 1024)
             {
@@ -818,9 +827,10 @@ namespace FasterHashing
 
                 var tmp = new byte[cbSize];
                 Array.Copy(array, ibStart, tmp, 0, cbSize);
-                if (Interop.CC_SHA512_Update(m_context, array, (CC_LONG)cbSize) != 1)
+                if (Interop.CC_SHA512_Update(m_context, tmp, (CC_LONG)cbSize) != 1)
                     throw new Win32Exception(Marshal.GetLastWin32Error());
             }
+#endif
             // Otherwise, the fastest is obtaining a pinned pointer and adding the offset to that
             else
             {

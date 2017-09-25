@@ -114,6 +114,7 @@ namespace FasterHashing
                 if (Interop<#= lib #>.EVP_DigestUpdate(m_context, array, (uint)cbSize) != 1)
                     throw new Win32Exception(Marshal.GetLastWin32Error());
             }
+#if AVOID_PINNING_SMALL_ARRAYS
             // For small chunks, we can copy and get mostly the same performance as the managed version
             else if (cbSize < 1024)
             {
@@ -125,6 +126,7 @@ namespace FasterHashing
                 if (Interop<#= lib #>.EVP_DigestUpdate(m_context, tmp, (uint)cbSize) != 1)
                     throw new Win32Exception(Marshal.GetLastWin32Error());
             }
+#endif
             // Otherwise, the fastest is obtaining a pinned pointer and adding the offset to that
             else
             {
