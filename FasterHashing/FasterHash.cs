@@ -256,16 +256,17 @@ namespace FasterHashing
             return false;
 		}
 
-        /// <summary>
-        /// Performs a measurement for the number of hashes pr second for the given algorithm and implementation
-        /// </summary>
-        /// <returns>The number of hashes pr second.</returns>
-        /// <param name="algorithm">The algorithm to test with.</param>
-        /// <param name="implementation">The implementation to test.</param>
-        /// <param name="blocksize">The size of the blocks being hashed.</param>
-        /// <param name="hashesprround">The number of hashes between each time check.</param>
-        /// <param name="measureseconds">The number of seconds to measure.</param>
-        public static long TestHashesPrSecond(string algorithm = "SHA256", HashImplementation implementation = HashImplementation.Any, int blocksize = 102400, int hashesprround = 1000, float measureseconds = 2f)
+		/// <summary>
+		/// Performs a measurement for the number of hashes pr second for the given algorithm and implementation
+		/// </summary>
+		/// <returns>The number of hashes pr second.</returns>
+		/// <param name="algorithm">The algorithm to test with.</param>
+		/// <param name="implementation">The implementation to test.</param>
+		/// <param name="blocksize">The size of the blocks being hashed.</param>
+		/// <param name="hashesprround">The number of hashes between each time check.</param>
+		/// <param name="measureseconds">The number of seconds to measure.</param>
+		/// <param name="bufferoffset">The number of bytes to offset the buffer for measuring non-aligned performance</param>
+		public static long TestHashesPrSecond(string algorithm = "SHA256", HashImplementation implementation = HashImplementation.Any, int blocksize = 102400, int hashesprround = 1000, float measureseconds = 2f, int bufferoffset = 0)
         {
             using (var alg = Create(algorithm, false, implementation))
             {
@@ -275,14 +276,14 @@ namespace FasterHashing
                 var st = DateTime.Now;
                 var target = st.Ticks + TimeSpan.FromSeconds(measureseconds).Ticks;
 
-                var buffer = new byte[blocksize];
+                var buffer = new byte[blocksize + bufferoffset];
                 var performed = 0L;
 
                 alg.Initialize();
                 while (DateTime.Now.Ticks < target)
                 {
                     for (var i = 0; i < hashesprround; i++)
-                        alg.TransformBlock(buffer, 0, buffer.Length, buffer, 0);
+                        alg.TransformBlock(buffer, bufferoffset, blocksize, buffer, bufferoffset);
                     performed++;
                 }
 
@@ -301,11 +302,12 @@ namespace FasterHashing
 		/// <param name="blocksize">The size of the blocks being hashed.</param>
 		/// <param name="hashesprround">The number of hashes between each time check.</param>
 		/// <param name="measureseconds">The number of seconds to measure.</param>
-		public static IEnumerable<Tuple<HashImplementation, long>> MeasureImplementations(string algorithm = "SHA256", int blocksize = 102400, int hashesprround = 1000, float measureseconds = 2f)
+        /// <param name="bufferoffset">The number of bytes to offset the buffer for measuring non-aligned performance</param>
+		public static IEnumerable<Tuple<HashImplementation, long>> MeasureImplementations(string algorithm = "SHA256", int blocksize = 102400, int hashesprround = 1000, float measureseconds = 2f, int bufferoffset = 0)
         {
             return
                 SupportedImplementations
-                    .Select(x => new Tuple<HashImplementation, long>(x, TestHashesPrSecond(algorithm, x, blocksize, hashesprround, measureseconds)));
+                    .Select(x => new Tuple<HashImplementation, long>(x, TestHashesPrSecond(algorithm, x, blocksize, hashesprround, measureseconds, bufferoffset)));
         }
 
 		/// <summary>
@@ -315,13 +317,14 @@ namespace FasterHashing
 		/// <param name="blocksize">The size of the blocks being hashed.</param>
 		/// <param name="hashesprround">The number of hashes between each time check.</param>
 		/// <param name="measureseconds">The number of seconds to measure.</param>
-		public static void SetDefaultImplementationToFastest(string algorithm = "SHA256", int blocksize = 102400, int hashesprround = 1000, float measureseconds = 2f)
+		/// <param name="bufferoffset">The number of bytes to offset the buffer for measuring non-aligned performance</param>
+		public static void SetDefaultImplementationToFastest(string algorithm = "SHA256", int blocksize = 102400, int hashesprround = 1000, float measureseconds = 2f, int bufferoffset = 0)
         {
             if (SupportedImplementations.Count() == 1)
                 PreferedImplementation = SupportedImplementations.First();
             else
                 PreferedImplementation =
-                    MeasureImplementations(algorithm, blocksize, hashesprround, measureseconds)
+                    MeasureImplementations(algorithm, blocksize, hashesprround, measureseconds, bufferoffset)
                         .OrderByDescending(x => x.Item2)
                         .Select(x => x.Item1)
                         .First();

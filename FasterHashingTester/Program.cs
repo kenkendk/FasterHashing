@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -10,23 +11,150 @@ namespace FasterHashingTester
         {
             Console.WriteLine("Optimal implementation is: {0}", FasterHashing.FasterHash.PreferedImplementation);
 
-            Console.WriteLine("Performing basic tests");
-            Test();
+            if (args == null || args.Length == 0)
+            {
 
-            Console.WriteLine("Performing tests with non-zero offsets");
-            TestWithOffset();
+                Console.WriteLine("Performing basic tests");
+                Test();
 
-            Console.WriteLine("Testing performance with 64b block");
-            foreach (var n in FasterHashing.FasterHash.MeasureImplementations("SHA256", 64))
-                Console.WriteLine("{0, 20}:  {1} hashes/second", n.Item1, n.Item2);
+                Console.WriteLine("Performing tests with non-zero offsets");
+                TestWithOffset();
 
-			Console.WriteLine("Testing performance with 100kb blocks");
-			foreach (var n in FasterHashing.FasterHash.MeasureImplementations("SHA256", 102400))
-                Console.WriteLine("{0, 20}:  {1} hashes/second", n.Item1, n.Item2);
+                Console.WriteLine("Testing performance with 64b block");
+                foreach (var n in FasterHashing.FasterHash.MeasureImplementations("SHA256", 64))
+                    Console.WriteLine("{0, 20}:  {1} hashes/second", n.Item1, n.Item2);
 
-			Console.WriteLine("Testing multithreadded execution to wiggle out any shared state problems");
-			TestThreads();
+                Console.WriteLine("Testing performance with 100kb blocks");
+                foreach (var n in FasterHashing.FasterHash.MeasureImplementations("SHA256", 102400))
+                    Console.WriteLine("{0, 20}:  {1} hashes/second", n.Item1, n.Item2);
+
+				Console.WriteLine("Testing performance with 64b blocks and 5 byte offset");
+                foreach (var n in FasterHashing.FasterHash.MeasureImplementations("SHA256", 64, bufferoffset: 5))
+					Console.WriteLine("{0, 20}:  {1} hashes/second", n.Item1, n.Item2);
+
+				Console.WriteLine("Testing performance with 100kb blocks and 5 byte offset");
+                foreach (var n in FasterHashing.FasterHash.MeasureImplementations("SHA256", 102400, bufferoffset: 5))
+					Console.WriteLine("{0, 20}:  {1} hashes/second", n.Item1, n.Item2);
+                
+				Console.WriteLine("Testing multithreadded execution to wiggle out any shared state problems");
+                TestThreads();
+            }
+            else
+            {
+                var readbuffer = 5242880;
+                var blocksize = 102400;
+
+                var arglist = new List<string>(args);
+                for(var i = arglist.Count - 1; i >= 0; i--)
+                {
+                    var p = (arglist[i] ?? string.Empty).Trim();
+                    if (p.StartsWith("--readbuffer=", StringComparison.OrdinalIgnoreCase))
+                    {
+                        readbuffer = int.Parse(p.Substring("--readbuffer=".Length));
+                        arglist.RemoveAt(i);
+                    }
+                    else if (p.StartsWith("--blocksize=", StringComparison.OrdinalIgnoreCase))
+                    {
+						blocksize = int.Parse(p.Substring("--blocksize=".Length));
+						arglist.RemoveAt(i);
+					}
+				}
+
+                foreach (var arg in arglist)
+                {
+                    if (System.IO.Directory.Exists(arg))
+                    {
+                        foreach (var line in CompareDirectory(arg))
+                            Console.WriteLine(line);
+                    }
+                    else if (System.IO.File.Exists(arg))
+                    {
+                        foreach (var line in CompareFile(arg))
+                            Console.WriteLine(line);
+                    }
+                    else
+                    {
+                        Console.WriteLine("Bad argument: {0}", arg);
+                    }
+                }
+
+                //var path = "/Users/kenneth/testdata/data/mp3 - Brad Sucks/Out of It/";
+                //path = "/Users/kenneth/Downloads/duplicati-bf19b64e8fdd948d7acb18792b0bcc767.dblock";
+            }
+
+
 		}
+
+        private static IEnumerable<string> CompareDirectory(string directory, long readbuffer = 5242880, int blocksize = 102400)
+        {
+            if (!System.IO.Directory.Exists(directory))
+                throw new Exception($"Not a directory: {directory}");
+
+            foreach (var file in System.IO.Directory.GetFiles(directory))
+            {
+                foreach (var fr in CompareFile(file, readbuffer, blocksize))
+                    yield return fr;
+
+                yield return string.Empty;
+            }
+        }
+
+		private static IEnumerable<string> CompareFile(string file, long readbuffer = 5242880, int blocksize = 102400)
+        {
+            if (!System.IO.File.Exists(file))
+                throw new Exception($"No such file: {file}");
+
+			yield return string.Format("Hashing file: {0}", file);
+			var st = DateTime.Now;
+
+			foreach (var hi in FasterHashing.FasterHash.SupportedImplementations)
+            {
+                var buf = new byte[readbuffer];
+
+                using (var fs = System.IO.File.OpenRead(file))
+                using (var alg1 = FasterHashing.FasterHash.Create("SHA256", false, hi))
+                using (var alg2 = FasterHashing.FasterHash.Create("SHA256", false, hi))
+                {
+                    alg1.Initialize();
+                    alg2.Initialize();
+
+                    var r = 0;
+                    while ((r = fs.Read(buf, 0, buf.Length)) != 0)
+                    {
+                        var left = r;
+                        var offset = 0;
+
+                        while (left > 0)
+                        {
+                            var rr = Math.Min(left, blocksize);
+                            alg1.TransformBlock(buf, offset, rr, buf, offset);
+                            alg2.Initialize();
+                            alg2.TransformBlock(buf, offset, rr, buf, offset);
+                            var r1 = alg2.TransformFinalBlock(buf, 0, 0);
+
+                            //var r0 = alg2.ComputeHash(buf, offset, rr);
+
+                            left -= rr;
+                            offset += rr;
+                        }
+                    }
+
+                    var res = alg1.TransformFinalBlock(new byte[0], 0, 0);
+                    var raw = Convert.ToBase64String(alg1.Hash);
+
+                    /*alg1.Initialize();
+                    fs.Position = 0;
+                    var direct = Convert.ToBase64String(alg1.ComputeHash(fs));
+
+                    if (raw != direct)
+                        throw new Exception("The hashes for individual chunk differs from the complete hash");
+                    */
+
+                    var elapsed = DateTime.Now - st;
+                    yield return string.Format("{0, 20}: {1} {2}", hi, raw, elapsed);
+                }
+            }
+        }
 
         private static void CompareArrays(byte[] a, byte[] b)
         {
