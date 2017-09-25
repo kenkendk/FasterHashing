@@ -50,8 +50,8 @@ namespace FasterHashing
         /// <summary>
         /// Initializes a new instance of the <see cref="T:FasterHashing.<#= lib #>HashAlgorithm<#= alg ?? "" #>"/> class.
         /// </summary>
-        <# if (alg == null) { #>
-/// <param name="algorithm">The name of the hash algorithm to use.</param>
+<# if (alg == null) { #>
+        /// <param name="algorithm">The name of the hash algorithm to use.</param>
 <# } #>
         public <#= lib #>HashAlgorithm<#= alg ?? "" #>(<# if (alg == null) { #>string algorithm<# } #>)
         {
