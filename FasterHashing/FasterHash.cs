@@ -120,11 +120,37 @@ namespace FasterHashing
         {
             System.Diagnostics.Trace.WriteLine("Probing for hashing libraries");
 
-            if (ShouldUseCNG)
+			var env = Environment.GetEnvironmentVariable("FH_LIBRARY") ?? string.Empty;
+
+            // First try fully named versions
+            HashImplementation impl;
+            if (Enum.TryParse(env, true, out impl) && impl != HashImplementation.Any)
+                return impl;
+
+            // Then try common names for AppleCommonCrypto
+            if (new[] { "apple", "applecc", "osx", "macos" }.Any(x => string.Equals(x, env)))
+            {
+                if (SupportsImplementation(HashImplementation.AppleCommonCrypto))
+                    return HashImplementation.AppleCommonCrypto;
+            }
+
+			// Then try common names for OpenSSL
+			if (new[] { "openssl", "ssleay", "ssl" }.Any(x => string.Equals(x, env)))
+            {
+                if (SupportsImplementation(HashImplementation.OpenSSL11))
+                    return HashImplementation.OpenSSL11;
+				if (SupportsImplementation(HashImplementation.OpenSSL10))
+					return HashImplementation.OpenSSL10;
+                if (SupportsImplementation(HashImplementation.AppleCommonCrypto))
+                    return HashImplementation.AppleCommonCrypto;
+			}
+
+            // Then test if CNG is an option
+			if (ShouldUseCNG)
             {
                 if (string.Equals(Environment.GetEnvironmentVariable("FH_DISABLE_CNG"), "1", StringComparison.OrdinalIgnoreCase))
                 {
-                    System.Diagnostics.Trace.WriteLine("CNG use is disableds");
+                    System.Diagnostics.Trace.WriteLine("CNG use is disabled");
                 }
                 else
                 {
@@ -132,6 +158,7 @@ namespace FasterHashing
                 }
 			}
 
+            // Or if we should use AppleCommonCrypto
             if (string.Equals(Environment.GetEnvironmentVariable("FH_DISABLE_APPLECC"), "1", StringComparison.OrdinalIgnoreCase))
             {
 				System.Diagnostics.Trace.WriteLine("Apple CommonCrypto disabled, not probing");
@@ -145,6 +172,7 @@ namespace FasterHashing
                 }
             }
 
+            // Finally test for OpenSSL versions, newest first
 			string version = null;
 			if (string.Equals(Environment.GetEnvironmentVariable("FH_DISABLE_OPENSSL11"), "1", StringComparison.OrdinalIgnoreCase))
 			{
@@ -174,6 +202,7 @@ namespace FasterHashing
 				}
             }
 
+            // Finally, fall back to the managed version
             return HashImplementation.Managed;
 		}
 
