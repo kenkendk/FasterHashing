@@ -2,7 +2,7 @@
 <package >
   <metadata>
     <id>FasterHashing</id>
-    <version>1.2</version>
+    <version>1.2.1</version>
     <title>FasterHashing</title>
     <authors>Kenneth Skovhede</authors>
     <owners>Kenneth Skovhede</owners>
@@ -10,9 +10,9 @@
     <projectUrl>https://github.com/kenkendk/FasterHashing</projectUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>FasterHashing library</description>
-    <releaseNotes>Fixed a bug with hashing small blocks at non-zero offsets.</releaseNotes>
+    <releaseNotes>Added support for choosing the implementation via the FH_LIBRARY environement variable.</releaseNotes>
     <copyright>Copyright 2017, Kenneth Skovhede</copyright>
-    <tags>Hashing MD5 SHA1 SHA256 SHA384 SHA512</tags>
+    <tags>Hashing MD5 SHA1 SHA256 SHA384 SHA512 OpenSSL AppleCommonCrypto CNG</tags>
   </metadata>
   <files>
     <file src="FasterHashing/bin/Release/FasterHashing.dll" target="lib/net45" />
