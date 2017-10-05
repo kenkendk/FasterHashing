@@ -64,9 +64,8 @@ namespace FasterHashing
         public override void Initialize()
         {
             if (m_context != IntPtr.Zero)
-                InteropOpenSSL10.EVP_MD_CTX_cleanup(m_context);
-            else
-                m_context = InteropOpenSSL10.EVP_MD_CTX_create();
+                InteropOpenSSL10.EVP_MD_CTX_destroy(m_context);
+            m_context = InteropOpenSSL10.EVP_MD_CTX_create();
 
             if (InteropOpenSSL10.EVP_DigestInit_ex(m_context, m_digestmethod, IntPtr.Zero) != 1)
                 throw new Win32Exception(Marshal.GetLastWin32Error());
@@ -121,6 +120,9 @@ namespace FasterHashing
         /// <returns>The final messge digest.</returns>
         protected override byte[] HashFinal()
         {
+            if (m_context == IntPtr.Zero)
+                Initialize();
+
             var res = new byte[m_size];
             var rs = (uint)m_size;
             if (InteropOpenSSL10.EVP_DigestFinal_ex(m_context, res, ref rs) != 1)
@@ -236,9 +238,8 @@ namespace FasterHashing
         public override void Initialize()
         {
             if (m_context != IntPtr.Zero)
-                InteropOpenSSL10.EVP_MD_CTX_cleanup(m_context);
-            else
-                m_context = InteropOpenSSL10.EVP_MD_CTX_create();
+                InteropOpenSSL10.EVP_MD_CTX_destroy(m_context);
+            m_context = InteropOpenSSL10.EVP_MD_CTX_create();
 
             if (InteropOpenSSL10.EVP_DigestInit_ex(m_context, m_digestmethod, IntPtr.Zero) != 1)
                 throw new Win32Exception(Marshal.GetLastWin32Error());
@@ -293,6 +294,9 @@ namespace FasterHashing
         /// <returns>The final messge digest.</returns>
         protected override byte[] HashFinal()
         {
+            if (m_context == IntPtr.Zero)
+                Initialize();
+
             var res = new byte[m_size];
             var rs = (uint)m_size;
             if (InteropOpenSSL10.EVP_DigestFinal_ex(m_context, res, ref rs) != 1)
@@ -386,9 +390,8 @@ namespace FasterHashing
         public override void Initialize()
         {
             if (m_context != IntPtr.Zero)
-                InteropOpenSSL10.EVP_MD_CTX_cleanup(m_context);
-            else
-                m_context = InteropOpenSSL10.EVP_MD_CTX_create();
+                InteropOpenSSL10.EVP_MD_CTX_destroy(m_context);
+            m_context = InteropOpenSSL10.EVP_MD_CTX_create();
 
             if (InteropOpenSSL10.EVP_DigestInit_ex(m_context, m_digestmethod, IntPtr.Zero) != 1)
                 throw new Win32Exception(Marshal.GetLastWin32Error());
@@ -443,6 +446,9 @@ namespace FasterHashing
         /// <returns>The final messge digest.</returns>
         protected override byte[] HashFinal()
         {
+            if (m_context == IntPtr.Zero)
+                Initialize();
+
             var res = new byte[m_size];
             var rs = (uint)m_size;
             if (InteropOpenSSL10.EVP_DigestFinal_ex(m_context, res, ref rs) != 1)
@@ -536,9 +542,8 @@ namespace FasterHashing
         public override void Initialize()
         {
             if (m_context != IntPtr.Zero)
-                InteropOpenSSL10.EVP_MD_CTX_cleanup(m_context);
-            else
-                m_context = InteropOpenSSL10.EVP_MD_CTX_create();
+                InteropOpenSSL10.EVP_MD_CTX_destroy(m_context);
+            m_context = InteropOpenSSL10.EVP_MD_CTX_create();
 
             if (InteropOpenSSL10.EVP_DigestInit_ex(m_context, m_digestmethod, IntPtr.Zero) != 1)
                 throw new Win32Exception(Marshal.GetLastWin32Error());
@@ -593,6 +598,9 @@ namespace FasterHashing
         /// <returns>The final messge digest.</returns>
         protected override byte[] HashFinal()
         {
+            if (m_context == IntPtr.Zero)
+                Initialize();
+
             var res = new byte[m_size];
             var rs = (uint)m_size;
             if (InteropOpenSSL10.EVP_DigestFinal_ex(m_context, res, ref rs) != 1)
@@ -686,9 +694,8 @@ namespace FasterHashing
         public override void Initialize()
         {
             if (m_context != IntPtr.Zero)
-                InteropOpenSSL10.EVP_MD_CTX_cleanup(m_context);
-            else
-                m_context = InteropOpenSSL10.EVP_MD_CTX_create();
+                InteropOpenSSL10.EVP_MD_CTX_destroy(m_context);
+            m_context = InteropOpenSSL10.EVP_MD_CTX_create();
 
             if (InteropOpenSSL10.EVP_DigestInit_ex(m_context, m_digestmethod, IntPtr.Zero) != 1)
                 throw new Win32Exception(Marshal.GetLastWin32Error());
@@ -743,6 +750,9 @@ namespace FasterHashing
         /// <returns>The final messge digest.</returns>
         protected override byte[] HashFinal()
         {
+            if (m_context == IntPtr.Zero)
+                Initialize();
+
             var res = new byte[m_size];
             var rs = (uint)m_size;
             if (InteropOpenSSL10.EVP_DigestFinal_ex(m_context, res, ref rs) != 1)
@@ -836,9 +846,8 @@ namespace FasterHashing
         public override void Initialize()
         {
             if (m_context != IntPtr.Zero)
-                InteropOpenSSL10.EVP_MD_CTX_cleanup(m_context);
-            else
-                m_context = InteropOpenSSL10.EVP_MD_CTX_create();
+                InteropOpenSSL10.EVP_MD_CTX_destroy(m_context);
+            m_context = InteropOpenSSL10.EVP_MD_CTX_create();
 
             if (InteropOpenSSL10.EVP_DigestInit_ex(m_context, m_digestmethod, IntPtr.Zero) != 1)
                 throw new Win32Exception(Marshal.GetLastWin32Error());
@@ -893,6 +902,9 @@ namespace FasterHashing
         /// <returns>The final messge digest.</returns>
         protected override byte[] HashFinal()
         {
+            if (m_context == IntPtr.Zero)
+                Initialize();
+
             var res = new byte[m_size];
             var rs = (uint)m_size;
             if (InteropOpenSSL10.EVP_DigestFinal_ex(m_context, res, ref rs) != 1)
@@ -977,9 +989,8 @@ namespace FasterHashing
         public override void Initialize()
         {
             if (m_context != IntPtr.Zero)
-                InteropOpenSSL11.EVP_MD_CTX_reset(m_context);
-            else
-                m_context = InteropOpenSSL11.EVP_MD_CTX_new();
+                InteropOpenSSL11.EVP_MD_CTX_free(m_context);
+            m_context = InteropOpenSSL11.EVP_MD_CTX_new();
 
             if (InteropOpenSSL11.EVP_DigestInit_ex(m_context, m_digestmethod, IntPtr.Zero) != 1)
                 throw new Win32Exception(Marshal.GetLastWin32Error());
@@ -1034,6 +1045,9 @@ namespace FasterHashing
         /// <returns>The final messge digest.</returns>
         protected override byte[] HashFinal()
         {
+            if (m_context == IntPtr.Zero)
+                Initialize();
+
             var res = new byte[m_size];
             var rs = (uint)m_size;
             if (InteropOpenSSL11.EVP_DigestFinal_ex(m_context, res, ref rs) != 1)
@@ -1140,9 +1154,8 @@ namespace FasterHashing
         public override void Initialize()
         {
             if (m_context != IntPtr.Zero)
-                InteropOpenSSL11.EVP_MD_CTX_reset(m_context);
-            else
-                m_context = InteropOpenSSL11.EVP_MD_CTX_new();
+                InteropOpenSSL11.EVP_MD_CTX_free(m_context);
+            m_context = InteropOpenSSL11.EVP_MD_CTX_new();
 
             if (InteropOpenSSL11.EVP_DigestInit_ex(m_context, m_digestmethod, IntPtr.Zero) != 1)
                 throw new Win32Exception(Marshal.GetLastWin32Error());
@@ -1197,6 +1210,9 @@ namespace FasterHashing
         /// <returns>The final messge digest.</returns>
         protected override byte[] HashFinal()
         {
+            if (m_context == IntPtr.Zero)
+                Initialize();
+
             var res = new byte[m_size];
             var rs = (uint)m_size;
             if (InteropOpenSSL11.EVP_DigestFinal_ex(m_context, res, ref rs) != 1)
@@ -1281,9 +1297,8 @@ namespace FasterHashing
         public override void Initialize()
         {
             if (m_context != IntPtr.Zero)
-                InteropOpenSSL11.EVP_MD_CTX_reset(m_context);
-            else
-                m_context = InteropOpenSSL11.EVP_MD_CTX_new();
+                InteropOpenSSL11.EVP_MD_CTX_free(m_context);
+            m_context = InteropOpenSSL11.EVP_MD_CTX_new();
 
             if (InteropOpenSSL11.EVP_DigestInit_ex(m_context, m_digestmethod, IntPtr.Zero) != 1)
                 throw new Win32Exception(Marshal.GetLastWin32Error());
@@ -1338,6 +1353,9 @@ namespace FasterHashing
         /// <returns>The final messge digest.</returns>
         protected override byte[] HashFinal()
         {
+            if (m_context == IntPtr.Zero)
+                Initialize();
+
             var res = new byte[m_size];
             var rs = (uint)m_size;
             if (InteropOpenSSL11.EVP_DigestFinal_ex(m_context, res, ref rs) != 1)
@@ -1422,9 +1440,8 @@ namespace FasterHashing
         public override void Initialize()
         {
             if (m_context != IntPtr.Zero)
-                InteropOpenSSL11.EVP_MD_CTX_reset(m_context);
-            else
-                m_context = InteropOpenSSL11.EVP_MD_CTX_new();
+                InteropOpenSSL11.EVP_MD_CTX_free(m_context);
+            m_context = InteropOpenSSL11.EVP_MD_CTX_new();
 
             if (InteropOpenSSL11.EVP_DigestInit_ex(m_context, m_digestmethod, IntPtr.Zero) != 1)
                 throw new Win32Exception(Marshal.GetLastWin32Error());
@@ -1479,6 +1496,9 @@ namespace FasterHashing
         /// <returns>The final messge digest.</returns>
         protected override byte[] HashFinal()
         {
+            if (m_context == IntPtr.Zero)
+                Initialize();
+
             var res = new byte[m_size];
             var rs = (uint)m_size;
             if (InteropOpenSSL11.EVP_DigestFinal_ex(m_context, res, ref rs) != 1)
@@ -1563,9 +1583,8 @@ namespace FasterHashing
         public override void Initialize()
         {
             if (m_context != IntPtr.Zero)
-                InteropOpenSSL11.EVP_MD_CTX_reset(m_context);
-            else
-                m_context = InteropOpenSSL11.EVP_MD_CTX_new();
+                InteropOpenSSL11.EVP_MD_CTX_free(m_context);
+            m_context = InteropOpenSSL11.EVP_MD_CTX_new();
 
             if (InteropOpenSSL11.EVP_DigestInit_ex(m_context, m_digestmethod, IntPtr.Zero) != 1)
                 throw new Win32Exception(Marshal.GetLastWin32Error());
@@ -1620,6 +1639,9 @@ namespace FasterHashing
         /// <returns>The final messge digest.</returns>
         protected override byte[] HashFinal()
         {
+            if (m_context == IntPtr.Zero)
+                Initialize();
+
             var res = new byte[m_size];
             var rs = (uint)m_size;
             if (InteropOpenSSL11.EVP_DigestFinal_ex(m_context, res, ref rs) != 1)
@@ -1704,9 +1726,8 @@ namespace FasterHashing
         public override void Initialize()
         {
             if (m_context != IntPtr.Zero)
-                InteropOpenSSL11.EVP_MD_CTX_reset(m_context);
-            else
-                m_context = InteropOpenSSL11.EVP_MD_CTX_new();
+                InteropOpenSSL11.EVP_MD_CTX_free(m_context);
+            m_context = InteropOpenSSL11.EVP_MD_CTX_new();
 
             if (InteropOpenSSL11.EVP_DigestInit_ex(m_context, m_digestmethod, IntPtr.Zero) != 1)
                 throw new Win32Exception(Marshal.GetLastWin32Error());
@@ -1761,6 +1782,9 @@ namespace FasterHashing
         /// <returns>The final messge digest.</returns>
         protected override byte[] HashFinal()
         {
+            if (m_context == IntPtr.Zero)
+                Initialize();
+
             var res = new byte[m_size];
             var rs = (uint)m_size;
             if (InteropOpenSSL11.EVP_DigestFinal_ex(m_context, res, ref rs) != 1)

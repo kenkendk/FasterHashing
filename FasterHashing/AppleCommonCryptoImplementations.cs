@@ -102,6 +102,9 @@ namespace FasterHashing
         /// <returns>The final messge digest.</returns>
         protected override byte[] HashFinal()
         {
+            if (m_context == IntPtr.Zero)
+                Initialize();
+
             var res = new byte[m_size];
             if (Interop.CC_MD5_Final(res, m_context) != 1)
                 throw new Win32Exception(Marshal.GetLastWin32Error());
@@ -289,6 +292,9 @@ namespace FasterHashing
         /// <returns>The final messge digest.</returns>
         protected override byte[] HashFinal()
         {
+            if (m_context == IntPtr.Zero)
+                Initialize();
+
             var res = new byte[m_size];
             if (Interop.CC_SHA1_Final(res, m_context) != 1)
                 throw new Win32Exception(Marshal.GetLastWin32Error());
@@ -476,6 +482,9 @@ namespace FasterHashing
         /// <returns>The final messge digest.</returns>
         protected override byte[] HashFinal()
         {
+            if (m_context == IntPtr.Zero)
+                Initialize();
+
             var res = new byte[m_size];
             if (Interop.CC_SHA256_Final(res, m_context) != 1)
                 throw new Win32Exception(Marshal.GetLastWin32Error());
@@ -663,6 +672,9 @@ namespace FasterHashing
         /// <returns>The final messge digest.</returns>
         protected override byte[] HashFinal()
         {
+            if (m_context == IntPtr.Zero)
+                Initialize();
+
             var res = new byte[m_size];
             if (Interop.CC_SHA384_Final(res, m_context) != 1)
                 throw new Win32Exception(Marshal.GetLastWin32Error());
@@ -850,6 +862,9 @@ namespace FasterHashing
         /// <returns>The final messge digest.</returns>
         protected override byte[] HashFinal()
         {
+            if (m_context == IntPtr.Zero)
+                Initialize();
+
             var res = new byte[m_size];
             if (Interop.CC_SHA512_Final(res, m_context) != 1)
                 throw new Win32Exception(Marshal.GetLastWin32Error());

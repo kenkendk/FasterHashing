@@ -89,9 +89,8 @@ namespace FasterHashing
         public override void Initialize()
         {
             if (m_context != IntPtr.Zero)
-                Interop<#= lib #>.EVP_MD_CTX_<#= cleanup #>(m_context);
-            else
-                m_context = Interop<#= lib #>.EVP_MD_CTX_<#= create #>();
+                Interop<#= lib #>.EVP_MD_CTX_<#= destroy #>(m_context);
+            m_context = Interop<#= lib #>.EVP_MD_CTX_<#= create #>();
 
             if (Interop<#= lib #>.EVP_DigestInit_ex(m_context, m_digestmethod, IntPtr.Zero) != 1)
                 throw new Win32Exception(Marshal.GetLastWin32Error());
@@ -146,6 +145,9 @@ namespace FasterHashing
         /// <returns>The final messge digest.</returns>
         protected override byte[] HashFinal()
         {
+            if (m_context == IntPtr.Zero)
+                Initialize();
+
             var res = new byte[m_size];
             var rs = (uint)m_size;
             if (Interop<#= lib #>.EVP_DigestFinal_ex(m_context, res, ref rs) != 1)

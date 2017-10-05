@@ -111,6 +111,9 @@ namespace FasterHashing
         /// <returns>The final messge digest.</returns>
         protected override byte[] HashFinal()
         {
+            if (m_context == IntPtr.Zero)
+                Initialize();
+
             var res = new byte[m_size];
             if (Interop.CC_<#= alg #>_Final(res, m_context) != 1)
                 throw new Win32Exception(Marshal.GetLastWin32Error());
