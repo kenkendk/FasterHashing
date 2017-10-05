@@ -43,6 +43,7 @@ namespace FasterHashingTester
             {
                 var readbuffer = 5242880;
                 var blocksize = 102400;
+                var algorithm = "SHA256";
 
                 var arglist = new List<string>(args);
                 for(var i = arglist.Count - 1; i >= 0; i--)
@@ -58,18 +59,23 @@ namespace FasterHashingTester
 						blocksize = int.Parse(p.Substring("--blocksize=".Length));
 						arglist.RemoveAt(i);
 					}
+					else if (p.StartsWith("--algorithm=", StringComparison.OrdinalIgnoreCase))
+					{
+                        algorithm = p.Substring("--algorithm=".Length).Trim().ToUpperInvariant();
+						arglist.RemoveAt(i);
+					}
 				}
 
                 foreach (var arg in arglist)
                 {
                     if (System.IO.Directory.Exists(arg))
                     {
-                        foreach (var line in CompareDirectory(arg))
+                        foreach (var line in CompareDirectory(arg, readbuffer, blocksize, algorithm))
                             Console.WriteLine(line);
                     }
                     else if (System.IO.File.Exists(arg))
                     {
-                        foreach (var line in CompareFile(arg))
+                        foreach (var line in CompareFile(arg, readbuffer, blocksize, algorithm))
                             Console.WriteLine(line);
                     }
                     else
@@ -85,21 +91,21 @@ namespace FasterHashingTester
 
 		}
 
-        private static IEnumerable<string> CompareDirectory(string directory, long readbuffer = 5242880, int blocksize = 102400)
+        private static IEnumerable<string> CompareDirectory(string directory, long readbuffer = 5242880, int blocksize = 102400, string algorithm = "SHA256")
         {
             if (!System.IO.Directory.Exists(directory))
                 throw new Exception($"Not a directory: {directory}");
 
             foreach (var file in System.IO.Directory.GetFiles(directory))
             {
-                foreach (var fr in CompareFile(file, readbuffer, blocksize))
+                foreach (var fr in CompareFile(file, readbuffer, blocksize, algorithm))
                     yield return fr;
 
                 yield return string.Empty;
             }
         }
 
-		private static IEnumerable<string> CompareFile(string file, long readbuffer = 5242880, int blocksize = 102400)
+		private static IEnumerable<string> CompareFile(string file, long readbuffer = 5242880, int blocksize = 102400, string algorithm = "SHA256")
         {
             if (!System.IO.File.Exists(file))
                 throw new Exception($"No such file: {file}");
@@ -112,8 +118,8 @@ namespace FasterHashingTester
                 var buf = new byte[readbuffer];
 
                 using (var fs = System.IO.File.OpenRead(file))
-                using (var alg1 = FasterHashing.FasterHash.Create("SHA256", false, hi))
-                using (var alg2 = FasterHashing.FasterHash.Create("SHA256", false, hi))
+                using (var alg1 = FasterHashing.FasterHash.Create(algorithm, false, hi))
+                using (var alg2 = FasterHashing.FasterHash.Create(algorithm, false, hi))
                 {
                     alg1.Initialize();
                     alg2.Initialize();
