@@ -78,7 +78,7 @@ namespace FasterHashing
         /// <param name="algorithm">The algorithm to get the size for.</param>
         internal static int GetDigestSize(AppleCCDigest algorithm)
         {
-            return (int)Interop.CCDigestGetOutputSize(AppleCCDigest.SHA256).ToInt64();
+            return (int)Interop.CCDigestGetOutputSize(algorithm).ToInt64();
         }
 
 		/// <summary>
@@ -88,7 +88,7 @@ namespace FasterHashing
 		/// <param name="algorithm">The algorithm to get the size for.</param>
 		internal static int GetBlockSize(AppleCCDigest algorithm)
 		{
-            return (int)Interop.CCDigestGetBlockSize(AppleCCDigest.SHA256).ToInt64();
+            return (int)Interop.CCDigestGetBlockSize(algorithm).ToInt64();
 		}
 
 		/// <summary>
