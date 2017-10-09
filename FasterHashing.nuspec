@@ -2,7 +2,7 @@
 <package >
   <metadata>
     <id>FasterHashing</id>
-    <version>1.2.2</version>
+    <version>1.2.3</version>
     <title>FasterHashing</title>
     <authors>Kenneth Skovhede</authors>
     <owners>Kenneth Skovhede</owners>
@@ -10,7 +10,7 @@
     <projectUrl>https://github.com/kenkendk/FasterHashing</projectUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>FasterHashing library</description>
-    <releaseNotes>Fixed a bug with AppleCC not returning the correct digest size for non-SHA256.</releaseNotes>
+    <releaseNotes>Fixed a bug with OpenSSL 1.1 not working.</releaseNotes>
     <copyright>Copyright 2017, Kenneth Skovhede</copyright>
     <tags>Hashing MD5 SHA1 SHA256 SHA384 SHA512 OpenSSL AppleCommonCrypto CNG</tags>
   </metadata>

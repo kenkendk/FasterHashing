@@ -9,7 +9,7 @@
     <AssemblyName>FasterHashingTester</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <Prefer32Bit>false</Prefer32Bit>
-    <ReleaseVersion>1.2.2</ReleaseVersion>
+    <ReleaseVersion>1.2.3</ReleaseVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
     <DebugSymbols>true</DebugSymbols>

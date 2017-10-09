@@ -8,7 +8,7 @@
     <RootNamespace>FasterHashing</RootNamespace>
     <AssemblyName>FasterHashing</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
-    <ReleaseVersion>1.2.2</ReleaseVersion>
+    <ReleaseVersion>1.2.3</ReleaseVersion>
     <SignAssembly>true</SignAssembly>
     <AssemblyOriginatorKeyFile>..\FasterHashing.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
