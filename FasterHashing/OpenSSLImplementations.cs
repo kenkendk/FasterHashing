@@ -940,7 +940,7 @@ namespace FasterHashing
 
 
     /// <summary>
-    /// Implementation of a hash algorithm, using OpenSSL 1.0
+    /// Implementation of a hash algorithm, using OpenSSL 1.1
     /// </summary>
     public class OpenSSL11HashAlgorithm : HashAlgorithm
     {
@@ -965,7 +965,6 @@ namespace FasterHashing
         /// <param name="algorithm">The name of the hash algorithm to use.</param>
         public OpenSSL11HashAlgorithm(string algorithm)
         {
-
             m_digestmethod = InteropOpenSSL11.EVP_get_digestbyname(algorithm);
             if (m_digestmethod == IntPtr.Zero)
                 throw new ArgumentException($"No such algorithm: {algorithm}");
@@ -1105,7 +1104,7 @@ namespace FasterHashing
 
 
     /// <summary>
-    /// Implementation of the MD5 hash algorithm, using OpenSSL 1.0
+    /// Implementation of the MD5 hash algorithm, using OpenSSL 1.1
     /// </summary>
     public class OpenSSL11HashAlgorithmMD5 : MD5
     {
@@ -1129,7 +1128,6 @@ namespace FasterHashing
         /// </summary>
         public OpenSSL11HashAlgorithmMD5()
         {
-
            var algorithm = "MD5";
             m_digestmethod = InteropOpenSSL11.EVP_get_digestbyname(algorithm);
             if (m_digestmethod == IntPtr.Zero)
@@ -1248,7 +1246,7 @@ namespace FasterHashing
 
 
     /// <summary>
-    /// Implementation of the SHA1 hash algorithm, using OpenSSL 1.0
+    /// Implementation of the SHA1 hash algorithm, using OpenSSL 1.1
     /// </summary>
     public class OpenSSL11HashAlgorithmSHA1 : SHA1
     {
@@ -1272,7 +1270,6 @@ namespace FasterHashing
         /// </summary>
         public OpenSSL11HashAlgorithmSHA1()
         {
-
            var algorithm = "SHA1";
             m_digestmethod = InteropOpenSSL11.EVP_get_digestbyname(algorithm);
             if (m_digestmethod == IntPtr.Zero)
@@ -1391,7 +1388,7 @@ namespace FasterHashing
 
 
     /// <summary>
-    /// Implementation of the SHA256 hash algorithm, using OpenSSL 1.0
+    /// Implementation of the SHA256 hash algorithm, using OpenSSL 1.1
     /// </summary>
     public class OpenSSL11HashAlgorithmSHA256 : SHA256
     {
@@ -1415,7 +1412,6 @@ namespace FasterHashing
         /// </summary>
         public OpenSSL11HashAlgorithmSHA256()
         {
-
            var algorithm = "SHA256";
             m_digestmethod = InteropOpenSSL11.EVP_get_digestbyname(algorithm);
             if (m_digestmethod == IntPtr.Zero)
@@ -1534,7 +1530,7 @@ namespace FasterHashing
 
 
     /// <summary>
-    /// Implementation of the SHA384 hash algorithm, using OpenSSL 1.0
+    /// Implementation of the SHA384 hash algorithm, using OpenSSL 1.1
     /// </summary>
     public class OpenSSL11HashAlgorithmSHA384 : SHA384
     {
@@ -1558,7 +1554,6 @@ namespace FasterHashing
         /// </summary>
         public OpenSSL11HashAlgorithmSHA384()
         {
-
            var algorithm = "SHA384";
             m_digestmethod = InteropOpenSSL11.EVP_get_digestbyname(algorithm);
             if (m_digestmethod == IntPtr.Zero)
@@ -1677,7 +1672,7 @@ namespace FasterHashing
 
 
     /// <summary>
-    /// Implementation of the SHA512 hash algorithm, using OpenSSL 1.0
+    /// Implementation of the SHA512 hash algorithm, using OpenSSL 1.1
     /// </summary>
     public class OpenSSL11HashAlgorithmSHA512 : SHA512
     {
@@ -1701,7 +1696,6 @@ namespace FasterHashing
         /// </summary>
         public OpenSSL11HashAlgorithmSHA512()
         {
-
            var algorithm = "SHA512";
             m_digestmethod = InteropOpenSSL11.EVP_get_digestbyname(algorithm);
             if (m_digestmethod == IntPtr.Zero)

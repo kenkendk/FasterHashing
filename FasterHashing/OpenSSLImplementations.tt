@@ -22,7 +22,7 @@ namespace FasterHashing
 
 #>
     /// <summary>
-    /// Implementation of <#= alg == null ? "a" : "the " + alg #> hash algorithm, using OpenSSL 1.0
+    /// Implementation of <#= alg == null ? "a" : "the " + alg #> hash algorithm, using OpenSSL <#= lib == "OpenSSL10" ? "1.0" : "1.1" #>
     /// </summary>
     public class <#= lib #>HashAlgorithm<#= alg ?? "" #> : <#= alg ?? "HashAlgorithm" #>
     {
@@ -61,8 +61,8 @@ namespace FasterHashing
                 Interop<#= lib #>.OpenSSL_add_all_digests();
                 _first = false;
             }
-<# } #>
 
+<# } #>
 <# if (alg != null) { #>
            var algorithm = "<#= alg #>";
 <# } #>

@@ -28,15 +28,15 @@ namespace FasterHashingTester
                 foreach (var n in FasterHashing.FasterHash.MeasureImplementations("SHA256", 102400))
                     Console.WriteLine("{0, 20}:  {1} hashes/second", n.Item1, n.Item2);
 
-				Console.WriteLine("Testing performance with 64b blocks and 5 byte offset");
+                Console.WriteLine("Testing performance with 64b blocks and 5 byte offset");
                 foreach (var n in FasterHashing.FasterHash.MeasureImplementations("SHA256", 64, bufferoffset: 5))
-					Console.WriteLine("{0, 20}:  {1} hashes/second", n.Item1, n.Item2);
+                    Console.WriteLine("{0, 20}:  {1} hashes/second", n.Item1, n.Item2);
 
-				Console.WriteLine("Testing performance with 100kb blocks and 5 byte offset");
+                Console.WriteLine("Testing performance with 100kb blocks and 5 byte offset");
                 foreach (var n in FasterHashing.FasterHash.MeasureImplementations("SHA256", 102400, bufferoffset: 5))
-					Console.WriteLine("{0, 20}:  {1} hashes/second", n.Item1, n.Item2);
+                    Console.WriteLine("{0, 20}:  {1} hashes/second", n.Item1, n.Item2);
                 
-				Console.WriteLine("Testing multithreadded execution to wiggle out any shared state problems");
+                Console.WriteLine("Testing multithreadded execution to wiggle out any shared state problems");
                 TestThreads();
             }
             else
@@ -56,15 +56,15 @@ namespace FasterHashingTester
                     }
                     else if (p.StartsWith("--blocksize=", StringComparison.OrdinalIgnoreCase))
                     {
-						blocksize = int.Parse(p.Substring("--blocksize=".Length));
-						arglist.RemoveAt(i);
-					}
-					else if (p.StartsWith("--algorithm=", StringComparison.OrdinalIgnoreCase))
-					{
+                        blocksize = int.Parse(p.Substring("--blocksize=".Length));
+                        arglist.RemoveAt(i);
+                    }
+                    else if (p.StartsWith("--algorithm=", StringComparison.OrdinalIgnoreCase))
+                    {
                         algorithm = p.Substring("--algorithm=".Length).Trim().ToUpperInvariant();
-						arglist.RemoveAt(i);
-					}
-				}
+                        arglist.RemoveAt(i);
+                    }
+                }
 
                 foreach (var arg in arglist)
                 {
@@ -89,7 +89,7 @@ namespace FasterHashingTester
             }
 
 
-		}
+        }
 
         private static IEnumerable<string> CompareDirectory(string directory, long readbuffer = 5242880, int blocksize = 102400, string algorithm = "SHA256")
         {
@@ -105,15 +105,15 @@ namespace FasterHashingTester
             }
         }
 
-		private static IEnumerable<string> CompareFile(string file, long readbuffer = 5242880, int blocksize = 102400, string algorithm = "SHA256")
+        private static IEnumerable<string> CompareFile(string file, long readbuffer = 5242880, int blocksize = 102400, string algorithm = "SHA256")
         {
             if (!System.IO.File.Exists(file))
                 throw new Exception($"No such file: {file}");
 
-			yield return string.Format("Hashing file: {0}", file);
-			var st = DateTime.Now;
+            yield return string.Format("Hashing file: {0}", file);
+            var st = DateTime.Now;
 
-			foreach (var hi in FasterHashing.FasterHash.SupportedImplementations)
+            foreach (var hi in FasterHashing.FasterHash.SupportedImplementations)
             {
                 var buf = new byte[readbuffer];
 
@@ -164,13 +164,13 @@ namespace FasterHashingTester
 
         private static void CompareArrays(byte[] a, byte[] b)
         {
-			if (a.Length != b.Length)
-				throw new Exception("Bad length");
+            if (a.Length != b.Length)
+                throw new Exception("Bad length");
 
-			for (var i = 0; i < a.Length; i++)
-				if (a[i] != b[i])
-					throw new Exception("Bad hash");
-		}
+            for (var i = 0; i < a.Length; i++)
+                if (a[i] != b[i])
+                    throw new Exception("Bad hash");
+        }
 
         private static void Test(int seed = 42)
         {
@@ -185,17 +185,17 @@ namespace FasterHashingTester
                 var f1 = f.ComputeHash(src);
 
                 CompareArrays(r1, f1);
-			}
+            }
         }
 
-		private static void TestWithOffset(int seed = 42)
-		{
-			using (var r = System.Security.Cryptography.HashAlgorithm.Create("SHA256"))
-			using (var f = FasterHashing.FasterHash.Create("SHA256"))
-				foreach (var size in new int[] { 1, 2, 3, 4, 5, 6, 16, 32, 64, 128, 256, 257, 258, 300, 500, 512, 1024, 2048, 7000, 102400 })
-				{
-					var src = new byte[size];
-					new Random(seed).NextBytes(src);
+        private static void TestWithOffset(int seed = 42)
+        {
+            using (var r = System.Security.Cryptography.HashAlgorithm.Create("SHA256"))
+            using (var f = FasterHashing.FasterHash.Create("SHA256"))
+                foreach (var size in new int[] { 1, 2, 3, 4, 5, 6, 16, 32, 64, 128, 256, 257, 258, 300, 500, 512, 1024, 2048, 7000, 102400 })
+                {
+                    var src = new byte[size];
+                    new Random(seed).NextBytes(src);
 
                     r.Initialize();
                     f.Initialize();
@@ -204,14 +204,14 @@ namespace FasterHashingTester
                     {
                         r.TransformBlock(src, offset, 1, src, offset);
                         f.TransformBlock(src, offset, 1, src, offset);
-					}
+                    }
 
                     var r1 = r.TransformFinalBlock(src, 0, 0);
                     var f1 = f.TransformFinalBlock(src, 0, 0);
 
                     CompareArrays(r1, f1);
-				}
-		}
+                }
+        }
 
         private static Tuple<string, TimeSpan>[] MeasureSpeeds(int seed = 42, int blocksize = 64)
         {
@@ -245,13 +245,13 @@ namespace FasterHashingTester
 
         private static void TestThreads(int seed = 42, int threads = 10)
         {
-			var refs = Enumerable.Range(0, threads).Select(x => Task.Run(() =>
-			{
+            var refs = Enumerable.Range(0, threads).Select(x => Task.Run(() =>
+            {
                 using (var alg = System.Security.Cryptography.HashAlgorithm.Create("SHA256"))
-					return PerformanceTest(alg, seed + x);
-			})).ToArray();
+                    return PerformanceTest(alg, seed + x);
+            })).ToArray();
 
-			var opt = Enumerable.Range(0, threads).Select(x => Task.Run(() =>
+            var opt = Enumerable.Range(0, threads).Select(x => Task.Run(() =>
             {
                 using(var alg = FasterHashing.FasterHash.Create("SHA256"))
                     return PerformanceTest(alg, seed + x);

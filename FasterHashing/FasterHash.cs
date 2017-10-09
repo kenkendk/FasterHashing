@@ -120,7 +120,7 @@ namespace FasterHashing
         {
             System.Diagnostics.Trace.WriteLine("Probing for hashing libraries");
 
-			var env = Environment.GetEnvironmentVariable("FH_LIBRARY") ?? string.Empty;
+            var env = Environment.GetEnvironmentVariable("FH_LIBRARY") ?? string.Empty;
 
             // First try fully named versions
             HashImplementation impl;
@@ -134,19 +134,19 @@ namespace FasterHashing
                     return HashImplementation.AppleCommonCrypto;
             }
 
-			// Then try common names for OpenSSL
-			if (new[] { "openssl", "ssleay", "ssl" }.Any(x => string.Equals(x, env)))
+            // Then try common names for OpenSSL
+            if (new[] { "openssl", "ssleay", "ssl" }.Any(x => string.Equals(x, env)))
             {
                 if (SupportsImplementation(HashImplementation.OpenSSL11))
                     return HashImplementation.OpenSSL11;
-				if (SupportsImplementation(HashImplementation.OpenSSL10))
-					return HashImplementation.OpenSSL10;
+                if (SupportsImplementation(HashImplementation.OpenSSL10))
+                    return HashImplementation.OpenSSL10;
                 if (SupportsImplementation(HashImplementation.AppleCommonCrypto))
                     return HashImplementation.AppleCommonCrypto;
-			}
+            }
 
             // Then test if CNG is an option
-			if (ShouldUseCNG)
+            if (ShouldUseCNG)
             {
                 if (string.Equals(Environment.GetEnvironmentVariable("FH_DISABLE_CNG"), "1", StringComparison.OrdinalIgnoreCase))
                 {
@@ -156,13 +156,13 @@ namespace FasterHashing
                 {
                     return HashImplementation.CNG;
                 }
-			}
+            }
 
             // Or if we should use AppleCommonCrypto
             if (string.Equals(Environment.GetEnvironmentVariable("FH_DISABLE_APPLECC"), "1", StringComparison.OrdinalIgnoreCase))
             {
-				System.Diagnostics.Trace.WriteLine("Apple CommonCrypto disabled, not probing");
-			}
+                System.Diagnostics.Trace.WriteLine("Apple CommonCrypto disabled, not probing");
+            }
             else
             {
                 if (AppleCommonCryptoHashAlgorithm.IsSupported)
@@ -173,38 +173,38 @@ namespace FasterHashing
             }
 
             // Finally test for OpenSSL versions, newest first
-			string version = null;
-			if (string.Equals(Environment.GetEnvironmentVariable("FH_DISABLE_OPENSSL11"), "1", StringComparison.OrdinalIgnoreCase))
-			{
-				System.Diagnostics.Trace.WriteLine("OpenSSL 1.1 disabled, not probing");
-			}
-			else
-			{
-				version = OpenSSL11Version;
-				if (version != null)
-				{
-					System.Diagnostics.Trace.WriteLine($"Found OpenSSL 1.1 library with version string: {version}");
-					return HashImplementation.OpenSSL11;
-				}
-			}
+            string version = null;
+            if (string.Equals(Environment.GetEnvironmentVariable("FH_DISABLE_OPENSSL11"), "1", StringComparison.OrdinalIgnoreCase))
+            {
+                System.Diagnostics.Trace.WriteLine("OpenSSL 1.1 disabled, not probing");
+            }
+            else
+            {
+                version = OpenSSL11Version;
+                if (version != null)
+                {
+                    System.Diagnostics.Trace.WriteLine($"Found OpenSSL 1.1 library with version string: {version}");
+                    return HashImplementation.OpenSSL11;
+                }
+            }
 
             if (string.Equals(Environment.GetEnvironmentVariable("FH_DISABLE_OPENSSL10"), "1", StringComparison.OrdinalIgnoreCase))
             {
-				System.Diagnostics.Trace.WriteLine("OpenSSL 1.0 disabled, not probing");
-			}
+                System.Diagnostics.Trace.WriteLine("OpenSSL 1.0 disabled, not probing");
+            }
             else
             {
-				version = OpenSSL10Version;
-				if (version != null)
+                version = OpenSSL10Version;
+                if (version != null)
                 {
                     System.Diagnostics.Trace.WriteLine($"Found OpenSSL 1.0 library with version string: {version}");
-					return HashImplementation.OpenSSL10;
-				}
+                    return HashImplementation.OpenSSL10;
+                }
             }
 
             // Finally, fall back to the managed version
             return HashImplementation.Managed;
-		}
+        }
 
         /// <summary>
         /// Gets the version string from the installed OpenSSL 1.0 library, or null if no such library is found
@@ -217,22 +217,22 @@ namespace FasterHashing
                 catch (Exception ex) { System.Diagnostics.Trace.WriteLine($"Failed to load OpenSSL10: {ex}"); }
 
                 return null;
-			}
+            }
         }
 
-		/// <summary>
-		/// Gets the version string from the installed OpenSSL 1.1 library, or null if no such library is found
-		/// </summary>
-		public static string OpenSSL11Version
-		{
-			get
-			{
-				try { return Marshal.PtrToStringAuto(InteropOpenSSL11.OpenSSL_version()); }
-				catch (Exception ex) { System.Diagnostics.Trace.WriteLine($"Failed to load OpenSSL11: {ex}"); }
+        /// <summary>
+        /// Gets the version string from the installed OpenSSL 1.1 library, or null if no such library is found
+        /// </summary>
+        public static string OpenSSL11Version
+        {
+            get
+            {
+                try { return Marshal.PtrToStringAuto(InteropOpenSSL11.OpenSSL_version()); }
+                catch (Exception ex) { System.Diagnostics.Trace.WriteLine($"Failed to load OpenSSL11: {ex}"); }
 
-				return null;
-			}
-		}
+                return null;
+            }
+        }
 
         /// <summary>
         /// Gets a value indicating if the CNG version is likely to yield a speedup
@@ -258,7 +258,7 @@ namespace FasterHashing
                     .Where(x => x != HashImplementation.Any)
                     .Where(x => SupportsImplementation(x));
 
-			}
+            }
         }
 
         /// <summary>
@@ -268,34 +268,34 @@ namespace FasterHashing
         /// <param name="implementation">The implementation to test for.</param>
         public static bool SupportsImplementation(HashImplementation implementation)
         {
-			switch (implementation)
-			{
-				case HashImplementation.OpenSSL10:
+            switch (implementation)
+            {
+                case HashImplementation.OpenSSL10:
                     return OpenSSL10Version != null;
-				case HashImplementation.OpenSSL11:
-					return OpenSSL11Version != null;
+                case HashImplementation.OpenSSL11:
+                    return OpenSSL11Version != null;
                 case HashImplementation.AppleCommonCrypto:
                     return AppleCommonCryptoHashAlgorithm.IsSupported;
-				case HashImplementation.CNG:
-				case HashImplementation.Managed:
+                case HashImplementation.CNG:
+                case HashImplementation.Managed:
                 case HashImplementation.Any:
                     return true;
-			}
+            }
 
             return false;
-		}
+        }
 
-		/// <summary>
-		/// Performs a measurement for the number of hashes pr second for the given algorithm and implementation
-		/// </summary>
-		/// <returns>The number of hashes pr second.</returns>
-		/// <param name="algorithm">The algorithm to test with.</param>
-		/// <param name="implementation">The implementation to test.</param>
-		/// <param name="blocksize">The size of the blocks being hashed.</param>
-		/// <param name="hashesprround">The number of hashes between each time check.</param>
-		/// <param name="measureseconds">The number of seconds to measure.</param>
-		/// <param name="bufferoffset">The number of bytes to offset the buffer for measuring non-aligned performance</param>
-		public static long TestHashesPrSecond(string algorithm = "SHA256", HashImplementation implementation = HashImplementation.Any, int blocksize = 102400, int hashesprround = 1000, float measureseconds = 2f, int bufferoffset = 0)
+        /// <summary>
+        /// Performs a measurement for the number of hashes pr second for the given algorithm and implementation
+        /// </summary>
+        /// <returns>The number of hashes pr second.</returns>
+        /// <param name="algorithm">The algorithm to test with.</param>
+        /// <param name="implementation">The implementation to test.</param>
+        /// <param name="blocksize">The size of the blocks being hashed.</param>
+        /// <param name="hashesprround">The number of hashes between each time check.</param>
+        /// <param name="measureseconds">The number of seconds to measure.</param>
+        /// <param name="bufferoffset">The number of bytes to offset the buffer for measuring non-aligned performance</param>
+        public static long TestHashesPrSecond(string algorithm = "SHA256", HashImplementation implementation = HashImplementation.Any, int blocksize = 102400, int hashesprround = 1000, float measureseconds = 2f, int bufferoffset = 0)
         {
             using (var alg = Create(algorithm, false, implementation))
             {
@@ -323,31 +323,31 @@ namespace FasterHashing
             }
         }
 
-		/// <summary>
-		/// Performs a measurement for the number of hashes pr second for the given algorithm and all supported implementations
-		/// </summary>
-		/// <returns>The number of hashes pr second for each implementation.</returns>
-		/// <param name="algorithm">The algorithm to test with.</param>
-		/// <param name="blocksize">The size of the blocks being hashed.</param>
-		/// <param name="hashesprround">The number of hashes between each time check.</param>
-		/// <param name="measureseconds">The number of seconds to measure.</param>
+        /// <summary>
+        /// Performs a measurement for the number of hashes pr second for the given algorithm and all supported implementations
+        /// </summary>
+        /// <returns>The number of hashes pr second for each implementation.</returns>
+        /// <param name="algorithm">The algorithm to test with.</param>
+        /// <param name="blocksize">The size of the blocks being hashed.</param>
+        /// <param name="hashesprround">The number of hashes between each time check.</param>
+        /// <param name="measureseconds">The number of seconds to measure.</param>
         /// <param name="bufferoffset">The number of bytes to offset the buffer for measuring non-aligned performance</param>
-		public static IEnumerable<Tuple<HashImplementation, long>> MeasureImplementations(string algorithm = "SHA256", int blocksize = 102400, int hashesprround = 1000, float measureseconds = 2f, int bufferoffset = 0)
+        public static IEnumerable<Tuple<HashImplementation, long>> MeasureImplementations(string algorithm = "SHA256", int blocksize = 102400, int hashesprround = 1000, float measureseconds = 2f, int bufferoffset = 0)
         {
             return
                 SupportedImplementations
                     .Select(x => new Tuple<HashImplementation, long>(x, TestHashesPrSecond(algorithm, x, blocksize, hashesprround, measureseconds, bufferoffset)));
         }
 
-		/// <summary>
-		/// Measures all supported implementations and picks the fastest
-		/// </summary>
-		/// <param name="algorithm">The algorithm to test with.</param>
-		/// <param name="blocksize">The size of the blocks being hashed.</param>
-		/// <param name="hashesprround">The number of hashes between each time check.</param>
-		/// <param name="measureseconds">The number of seconds to measure.</param>
-		/// <param name="bufferoffset">The number of bytes to offset the buffer for measuring non-aligned performance</param>
-		public static void SetDefaultImplementationToFastest(string algorithm = "SHA256", int blocksize = 102400, int hashesprround = 1000, float measureseconds = 2f, int bufferoffset = 0)
+        /// <summary>
+        /// Measures all supported implementations and picks the fastest
+        /// </summary>
+        /// <param name="algorithm">The algorithm to test with.</param>
+        /// <param name="blocksize">The size of the blocks being hashed.</param>
+        /// <param name="hashesprround">The number of hashes between each time check.</param>
+        /// <param name="measureseconds">The number of seconds to measure.</param>
+        /// <param name="bufferoffset">The number of bytes to offset the buffer for measuring non-aligned performance</param>
+        public static void SetDefaultImplementationToFastest(string algorithm = "SHA256", int blocksize = 102400, int hashesprround = 1000, float measureseconds = 2f, int bufferoffset = 0)
         {
             if (SupportedImplementations.Count() == 1)
                 PreferedImplementation = SupportedImplementations.First();
@@ -357,7 +357,7 @@ namespace FasterHashing
                         .OrderByDescending(x => x.Item2)
                         .Select(x => x.Item1)
                         .First();
-		}
+        }
 
-	}
+    }
 }
