@@ -93,7 +93,7 @@ namespace FasterHashing
                     result = OpenSSL10HashAlgorithm.Create(algorithm);
                     break;
                 case HashImplementation.OpenSSL11:
-                    result = OpenSSL10HashAlgorithm.Create(algorithm);
+                    result = OpenSSL11HashAlgorithm.Create(algorithm);
                     break;
                 case HashImplementation.CNG:
                     result = CNGHashAlgorithm.Create(algorithm, false);
