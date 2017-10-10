@@ -213,7 +213,7 @@ namespace FasterHashing
         {
             get
             {
-                try { return Marshal.PtrToStringAuto(InteropOpenSSL10.SSLeay_version()); }
+                try { return OpenSSL10HashAlgorithm.SSLeay_version(); }
                 catch (Exception ex) { System.Diagnostics.Trace.WriteLine($"Failed to load OpenSSL10: {ex}"); }
 
                 return null;
@@ -227,7 +227,7 @@ namespace FasterHashing
         {
             get
             {
-                try { return Marshal.PtrToStringAuto(InteropOpenSSL11.OpenSSL_version()); }
+                try { return OpenSSL11HashAlgorithm.OpenSSL_version(); }
                 catch (Exception ex) { System.Diagnostics.Trace.WriteLine($"Failed to load OpenSSL11: {ex}"); }
 
                 return null;
