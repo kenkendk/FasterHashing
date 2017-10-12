@@ -12,8 +12,7 @@ namespace FasterHashing
             libssl,
             libssl_so_1_0, 
             libssl_so_1_0_0,
-            libeay32_dll,
-            ssleay32_dll
+            libeay32_dll
         }
 
         private static LibraryName _libname = LibraryName.unknown;
@@ -46,8 +45,6 @@ namespace FasterHashing
                     return OpenSSL10_libssl_so_1_0_0_HashAlgorithm.Create(algorithm);
                 case LibraryName.libeay32_dll:
                     return OpenSSL10_libeay32_dll_HashAlgorithm.Create(algorithm);
-                case LibraryName.ssleay32_dll:
-                    return OpenSSL10_ssleay32_dll_HashAlgorithm.Create(algorithm);
 
                 //case LibraryName.libssl:
                 default:
@@ -90,17 +87,6 @@ namespace FasterHashing
                 System.Diagnostics.Trace.WriteLine($"Failed to load OpenSSL1.0 from libeay32.dll: {ex}");
             }
 
-            try
-            {
-                var ptr = InteropOpenSSL10_libeay32_dll.SSLeay_version();
-                if (ptr != IntPtr.Zero)
-                    return LibraryName.ssleay32_dll;
-            }
-            catch (Exception ex)
-            {
-                System.Diagnostics.Trace.WriteLine($"Failed to load OpenSSL1.0 from ssleay32.dll: {ex}");
-            }
-
             return LibraryName.libssl;
         }
 
@@ -117,8 +103,6 @@ namespace FasterHashing
                     return Marshal.PtrToStringAuto(InteropOpenSSL10_libssl_so_1_0_0.SSLeay_version());
                 case LibraryName.libeay32_dll:
                     return Marshal.PtrToStringAuto(InteropOpenSSL10_libeay32_dll.SSLeay_version());
-                case LibraryName.ssleay32_dll:
-                    return Marshal.PtrToStringAuto(InteropOpenSSL10_ssleay32_dll.SSLeay_version());
 
                 //case LibraryName.libssl:
                 default:
@@ -136,6 +120,9 @@ namespace FasterHashing
             libssl_so_1_1,
             libssl_so_1_1_0,
             libcrypto_dll,
+            libcrypto_x64_dll,
+            libcrypto_1_1_dll,
+            libcrypto_1_1_x64_dll
         }
 
         private static LibraryName _libname = LibraryName.unknown;
@@ -168,6 +155,12 @@ namespace FasterHashing
                     return OpenSSL11_libssl_so_1_1_0_HashAlgorithm.Create(algorithm);
                 case LibraryName.libcrypto_dll:
                     return OpenSSL11_libcrypto_dll_HashAlgorithm.Create(algorithm);
+                case LibraryName.libcrypto_x64_dll:
+                    return OpenSSL11_libcrypto_x64_dll_HashAlgorithm.Create(algorithm);
+                case LibraryName.libcrypto_1_1_dll:
+                    return OpenSSL11_libcrypto_1_1_dll_HashAlgorithm.Create(algorithm);
+                case LibraryName.libcrypto_1_1_x64_dll:
+                    return OpenSSL11_libcrypto_1_1_x64_dll_HashAlgorithm.Create(algorithm);
 
                 //case LibraryName.libssl:
                 default:
@@ -188,6 +181,12 @@ namespace FasterHashing
                     return Marshal.PtrToStringAuto(InteropOpenSSL11_libssl_so_1_1_0.OpenSSL_version());
                 case LibraryName.libcrypto_dll:
                     return Marshal.PtrToStringAuto(InteropOpenSSL11_libcrypto_dll.OpenSSL_version());
+                case LibraryName.libcrypto_x64_dll:
+                    return Marshal.PtrToStringAuto(InteropOpenSSL11_libcrypto_x64_dll.OpenSSL_version());
+                case LibraryName.libcrypto_1_1_dll:
+                    return Marshal.PtrToStringAuto(InteropOpenSSL11_libcrypto_1_1_dll.OpenSSL_version());
+                case LibraryName.libcrypto_1_1_x64_dll:
+                    return Marshal.PtrToStringAuto(InteropOpenSSL11_libcrypto_1_1_x64_dll.OpenSSL_version());
 
                 //case LibraryName.libssl:
                 default:
@@ -224,6 +223,39 @@ namespace FasterHashing
                 var ptr = InteropOpenSSL11_libcrypto_dll.OpenSSL_version();
                 if (ptr != IntPtr.Zero)
                     return LibraryName.libcrypto_dll;
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Trace.WriteLine($"Failed to load OpenSSL1.1 from libcrypto.dll: {ex}");
+            }
+
+            try
+            {
+                var ptr = InteropOpenSSL11_libcrypto_x64_dll.OpenSSL_version();
+                if (ptr != IntPtr.Zero)
+                    return LibraryName.libcrypto_x64_dll;
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Trace.WriteLine($"Failed to load OpenSSL1.1 from libcrypto.dll: {ex}");
+            }
+
+            try
+            {
+                var ptr = InteropOpenSSL11_libcrypto_1_1_dll.OpenSSL_version();
+                if (ptr != IntPtr.Zero)
+                    return LibraryName.libcrypto_1_1_dll;
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Trace.WriteLine($"Failed to load OpenSSL1.1 from libcrypto.dll: {ex}");
+            }
+
+            try
+            {
+                var ptr = InteropOpenSSL11_libcrypto_1_1_x64_dll.OpenSSL_version();
+                if (ptr != IntPtr.Zero)
+                    return LibraryName.libcrypto_1_1_x64_dll;
             }
             catch (Exception ex)
             {

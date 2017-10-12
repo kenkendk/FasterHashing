@@ -13,8 +13,8 @@ namespace FasterHashing
 <# 
   var libs = new[] { "OpenSSL10", "OpenSSL11" };
   var algs = new[] { null, "MD5", "SHA1", "SHA256", "SHA384", "SHA512" };
-  var libnames_10 = new [] { "libssl", "libssl.so.1.0", "libssl.so.1.0.0", "libeay32.dll", "ssleay32.dll" };
-  var libnames_11 = new [] { "libssl", "libssl.so.1.1", "libssl.so.1.1.0", "libcrypto.dll" };
+  var libnames_10 = new [] { "libssl", "libssl.so.1.0", "libssl.so.1.0.0", "libeay32.dll" };
+  var libnames_11 = new [] { "libssl", "libssl.so.1.1", "libssl.so.1.1.0", "libcrypto.dll", "libcrypto-1_1.dll", "libcrypto-1_1-x64.dll", "libcrypto-x64.dll" };
 
   foreach(var lib in libs) {
   foreach(var alg in algs) {
@@ -23,7 +23,7 @@ namespace FasterHashing
     var destroy = lib == "OpenSSL10" ? "destroy" : "free";
     var cleanup = lib == "OpenSSL10" ? "cleanup" : "reset";
     var create = lib == "OpenSSL10" ? "create" : "new";
-    var soname = _soname.Replace(".", "_");
+    var soname = _soname.Replace(".", "_").Replace("-", "_");
 
     var interopname = "Interop" + lib + "_" + soname;
 
