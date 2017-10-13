@@ -51,24 +51,27 @@ public static void Main(string[] args)
   
   // Manually choose OpenSSL 1.0 version:
   using(var sha256 = FasterHash.Create("SHA256", HashImplementation.OpenSSL10))
-  {}
+  { }
   
-  // Or by direct instantiation:
-  using(var sha256 = new OpenSSL11HashAlgorithmSHA256())
-  {}
+  // Set which version to use:
+  FasterHash.PreferedImplementation = HashImplementation.CNG;
   
+  // Or run a benchmark to get the fastest:
+  FasterHash.SetDefaultImplementationToFastest();
 }
 
 ```
 
-# Configure on Linux
-Some Linux distros do not have a `/lib/libssl.so` symlink, but only the fully versioned file `/lib/libssl.so.1.0.0`.
-Due to the way Mono probes for libraries, it will not pick up the fully versioned filename.
+# Configure with OpenSSL
+FasterHashing will automatically detect various names for OpenSSL, such as `libssl.so`, `libssl.so.1.0.0`. It will also detect the `libeay32.dll` and `libcrypto-1.1.dll` names on Windows. 
 
-There are two ways to fix this:
+If this detection fails for some reason, there are two ways to fix it:
+
 1. Make a symlink in `/lib/libssl.so` that points to the fully versioned filename.
 2. Use an [assembly config file](https://github.com/kenkendk/FasterHashing/blob/master/FasterHashing.dll.config) that remaps to the correct filename.
 
 Option (1) is the simplest, but may require root access.
 
 Option (2) only requires that you add a separate file to the folder where `FasterHashing.dll` is located, and put in the correct filename. You can probably copy the [example assembly config file](https://github.com/kenkendk/FasterHashing/blob/master/FasterHashing.dll.config) directly into the target folder.
+
+On Windows, option (2) does not work, but you can optionally drop in the `.dll` file into the same folder where the main executable is, and rename it to `libssl.dll` and it will be loaded.
