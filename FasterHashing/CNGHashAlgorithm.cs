@@ -6,7 +6,7 @@ namespace FasterHashing
     /// <summary>
     /// Wrapper class for creating CNG based hash algorithms
     /// </summary>
-    public class CNGHashAlgorithm
+    public static class CNGHashAlgorithm
     {
         /// <summary>
         /// Create the specified hash algorithm with the CNG implementation.

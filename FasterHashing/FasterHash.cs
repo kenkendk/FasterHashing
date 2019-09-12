@@ -68,11 +68,6 @@ namespace FasterHashing
         }
 
         /// <summary>
-        /// Dictionary with know implementation types
-        /// </summary>
-        private static readonly Dictionary<string, Type> _knowntypes = new Dictionary<string, Type>(StringComparer.OrdinalIgnoreCase);
-
-        /// <summary>
         /// Create the specified hashing algorithm.
         /// </summary>
         /// <returns>The created algorithm.</returns>

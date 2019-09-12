@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace FasterHashingTester
 {
-    class MainClass
+    static class MainClass
     {
         public static void Main(string[] args)
         {
@@ -94,7 +94,7 @@ namespace FasterHashingTester
         private static IEnumerable<string> CompareDirectory(string directory, long readbuffer = 5242880, int blocksize = 102400, string algorithm = "SHA256")
         {
             if (!System.IO.Directory.Exists(directory))
-                throw new Exception($"Not a directory: {directory}");
+                throw new System.IO.DirectoryNotFoundException($"Not a directory: {directory}");
 
             foreach (var file in System.IO.Directory.GetFiles(directory))
             {
@@ -108,7 +108,7 @@ namespace FasterHashingTester
         private static IEnumerable<string> CompareFile(string file, long readbuffer = 5242880, int blocksize = 102400, string algorithm = "SHA256")
         {
             if (!System.IO.File.Exists(file))
-                throw new Exception($"No such file: {file}");
+                throw new System.IO.FileNotFoundException($"No such file: {file}");
 
             yield return string.Format("Hashing file: {0}", file);
             var st = DateTime.Now;
@@ -136,7 +136,7 @@ namespace FasterHashingTester
                             alg1.TransformBlock(buf, offset, rr, buf, offset);
                             alg2.Initialize();
                             alg2.TransformBlock(buf, offset, rr, buf, offset);
-                            var r1 = alg2.TransformFinalBlock(buf, 0, 0);
+                            alg2.TransformFinalBlock(buf, 0, 0);
 
                             //var r0 = alg2.ComputeHash(buf, offset, rr);
 
