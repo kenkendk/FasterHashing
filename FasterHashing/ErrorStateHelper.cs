@@ -9,6 +9,6 @@ namespace FasterHashing
         /// <summary>
         /// A value indicating if the offset issue has been reported
         /// </summary>
-        public static bool HasReportedOffsetIssue;
+        public static bool HasReportedOffsetIssue { get; set; }
     }
 }
