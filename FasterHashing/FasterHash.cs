@@ -96,7 +96,8 @@ namespace FasterHashing
                 case HashImplementation.AppleCommonCrypto:
                     result = AppleCommonCryptoHashAlgorithm.Create(algorithm);
                     break;
-                case HashImplementation.Managed:
+                //case HashImplementation.Managed:
+                default:
                     result = HashAlgorithm.Create(algorithm);
                     break;
             }

@@ -22,10 +22,10 @@ PM> Install-Package FasterHashing
 
 ## Supported libraries
 These libraries are probed for at runtime in this order
-* Windows Cryptography Next Generation (CNG)
-* Apple Common Crypto
-* OpenSSL with version 1.1 API
-* OpenSSL with version 1.0 API
+*   Windows Cryptography Next Generation (CNG)
+*   Apple Common Crypto
+*   OpenSSL with version 1.1 API
+*   OpenSSL with version 1.0 API
 
 ## Example
 The returned item from `FasterHash.Create()` is a normal `HashAlgorithm` object, so you can easily replace existing code that uses such an instance.
@@ -68,8 +68,8 @@ FasterHashing will automatically detect various names for OpenSSL, such as `libs
 
 If this detection fails for some reason, there are two ways to fix it:
 
-1. Make a symlink in `/lib/libssl.so` that points to the fully versioned filename.
-2. Use an [assembly config file](https://github.com/kenkendk/FasterHashing/blob/master/FasterHashing.dll.config) that remaps to the correct filename.
+1.  Make a symlink in `/lib/libssl.so` that points to the fully versioned filename.
+2.  Use an [assembly config file](https://github.com/kenkendk/FasterHashing/blob/master/FasterHashing.dll.config) that remaps to the correct filename.
 
 Option (1) is the simplest, but may require root access.
 

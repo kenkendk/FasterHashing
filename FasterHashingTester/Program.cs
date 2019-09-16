@@ -83,12 +83,7 @@ namespace FasterHashingTester
                         Console.WriteLine("Bad argument: {0}", arg);
                     }
                 }
-
-                //var path = "/Users/kenneth/testdata/data/mp3 - Brad Sucks/Out of It/";
-                //path = "/Users/kenneth/Downloads/duplicati-bf19b64e8fdd948d7acb18792b0bcc767.dblock";
             }
-
-
         }
 
         private static IEnumerable<string> CompareDirectory(string directory, long readbuffer = 5242880, int blocksize = 102400, string algorithm = "SHA256")
