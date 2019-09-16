@@ -272,13 +272,12 @@ namespace FasterHashing
                     return OpenSSL11Version != null;
                 case HashImplementation.AppleCommonCrypto:
                     return AppleCommonCryptoHashAlgorithm.IsSupported;
-                case HashImplementation.CNG:
-                case HashImplementation.Managed:
-                case HashImplementation.Any:
+                //case HashImplementation.CNG:
+                //case HashImplementation.Managed:
+                //case HashImplementation.Any:
+                default:
                     return true;
             }
-
-            return false;
         }
 
         /// <summary>
