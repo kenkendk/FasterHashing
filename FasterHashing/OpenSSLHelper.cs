@@ -46,7 +46,7 @@ namespace FasterHashing
                 case LibraryName.libeay32_dll:
                     return OpenSSL10_libeay32_dll_HashAlgorithm.Create(algorithm);
 
-                //case LibraryName.libssl:
+                //case LibraryName.libssl3:
                 default:
                     return OpenSSL10_libssl_HashAlgorithm.Create(algorithm);
             }
@@ -62,7 +62,7 @@ namespace FasterHashing
             }
             catch (Exception ex)
             {
-                System.Diagnostics.Trace.WriteLine($"Failed to load OpenSSL1.0 from libssl.so.1.0.0: {ex}");
+                System.Diagnostics.Trace.WriteLine($"Failed to load OpenSSL1.0 from libssl3.so.1.0.0: {ex}");
             }
 
             try
@@ -73,7 +73,7 @@ namespace FasterHashing
             }
             catch (Exception ex)
             {
-                System.Diagnostics.Trace.WriteLine($"Failed to load OpenSSL1.0 from libssl.so.1.0: {ex}");
+                System.Diagnostics.Trace.WriteLine($"Failed to load OpenSSL1.0 from libssl3.so.1.0: {ex}");
             }
 
             try
@@ -104,7 +104,7 @@ namespace FasterHashing
                 case LibraryName.libeay32_dll:
                     return Marshal.PtrToStringAuto(InteropOpenSSL10_libeay32_dll.SSLeay_version());
 
-                //case LibraryName.libssl:
+                //case LibraryName.libssl3:
                 default:
                     return Marshal.PtrToStringAuto(InteropOpenSSL10_libssl.SSLeay_version());
             }
@@ -162,7 +162,6 @@ namespace FasterHashing
                 case LibraryName.libcrypto_1_1_x64_dll:
                     return OpenSSL11_libcrypto_1_1_x64_dll_HashAlgorithm.Create(algorithm);
 
-                //case LibraryName.libssl:
                 default:
                     return OpenSSL11_libssl_HashAlgorithm.Create(algorithm);
             }
@@ -176,21 +175,20 @@ namespace FasterHashing
             switch (library)
             {
                 case LibraryName.libssl_so_1_1:
-                    return Marshal.PtrToStringAuto(InteropOpenSSL11_libssl_so_1_1.OpenSSL_version());
+                    return Marshal.PtrToStringAnsi(InteropOpenSSL11_libssl_so_1_1.OpenSSL_version());
                 case LibraryName.libssl_so_1_1_0:
-                    return Marshal.PtrToStringAuto(InteropOpenSSL11_libssl_so_1_1_0.OpenSSL_version());
+                    return Marshal.PtrToStringAnsi(InteropOpenSSL11_libssl_so_1_1_0.OpenSSL_version());
                 case LibraryName.libcrypto_dll:
-                    return Marshal.PtrToStringAuto(InteropOpenSSL11_libcrypto_dll.OpenSSL_version());
+                    return Marshal.PtrToStringAnsi(InteropOpenSSL11_libcrypto_dll.OpenSSL_version());
                 case LibraryName.libcrypto_x64_dll:
-                    return Marshal.PtrToStringAuto(InteropOpenSSL11_libcrypto_x64_dll.OpenSSL_version());
+                    return Marshal.PtrToStringAnsi(InteropOpenSSL11_libcrypto_x64_dll.OpenSSL_version());
                 case LibraryName.libcrypto_1_1_dll:
-                    return Marshal.PtrToStringAuto(InteropOpenSSL11_libcrypto_1_1_dll.OpenSSL_version());
+                    return Marshal.PtrToStringAnsi(InteropOpenSSL11_libcrypto_1_1_dll.OpenSSL_version());
                 case LibraryName.libcrypto_1_1_x64_dll:
-                    return Marshal.PtrToStringAuto(InteropOpenSSL11_libcrypto_1_1_x64_dll.OpenSSL_version());
+                    return Marshal.PtrToStringAnsi(InteropOpenSSL11_libcrypto_1_1_x64_dll.OpenSSL_version());
 
-                //case LibraryName.libssl:
                 default:
-                    return Marshal.PtrToStringAuto(InteropOpenSSL11_libssl.OpenSSL_version());
+                   return Marshal.PtrToStringAnsi(InteropOpenSSL11_libssl.OpenSSL_version());
             }
         }
 
@@ -204,7 +202,7 @@ namespace FasterHashing
             }
             catch (Exception ex)
             {
-                System.Diagnostics.Trace.WriteLine($"Failed to load OpenSSL1.1 from libssl.so.1.1.0: {ex}");
+                System.Diagnostics.Trace.WriteLine($"Failed to load OpenSSL1.1 from libssl3.so.1.1.0: {ex}");
             }
 
             try
@@ -215,7 +213,7 @@ namespace FasterHashing
             }
             catch (Exception ex)
             {
-                System.Diagnostics.Trace.WriteLine($"Failed to load OpenSSL1.1 from libssl.so.1.1: {ex}");
+                System.Diagnostics.Trace.WriteLine($"Failed to load OpenSSL1.1 from libssl3.so.1.1: {ex}");
             }
 
             try
@@ -237,7 +235,7 @@ namespace FasterHashing
             }
             catch (Exception ex)
             {
-                System.Diagnostics.Trace.WriteLine($"Failed to load OpenSSL1.1 from libcrypto.dll: {ex}");
+                System.Diagnostics.Trace.WriteLine($"Failed to load OpenSSL1.1 from libcrypto_x64.dll: {ex}");
             }
 
             try
@@ -248,7 +246,7 @@ namespace FasterHashing
             }
             catch (Exception ex)
             {
-                System.Diagnostics.Trace.WriteLine($"Failed to load OpenSSL1.1 from libcrypto.dll: {ex}");
+                System.Diagnostics.Trace.WriteLine($"Failed to load OpenSSL1.1 from libcrypto-1-1_dll: {ex}");
             }
 
             try
@@ -259,9 +257,160 @@ namespace FasterHashing
             }
             catch (Exception ex)
             {
-                System.Diagnostics.Trace.WriteLine($"Failed to load OpenSSL1.1 from libcrypto.dll: {ex}");
+                System.Diagnostics.Trace.WriteLine($"Failed to load OpenSSL1.1 from libcrypto-1-1-x64_dll.dll: {ex}");
             }
 
+
+            return LibraryName.libssl;
+        }
+
+    }
+
+    public static class OpenSSL3HashAlgorithm
+    {
+        public enum LibraryName
+        {
+            unknown,
+            libssl,
+            libssl_so_3,
+            libcrypto_so,
+            libcrypto_so_3,
+            libcrypto_dll,
+            libcrypto_x64_dll,
+            libcrypto_3_dll,
+            libcrypto_3_x64_dll
+        }
+
+        private static LibraryName _libname = LibraryName.unknown;
+
+        public static LibraryName DefaultLibrary
+        {
+            get
+            {
+                if (_libname == LibraryName.unknown)
+                    _libname = GetDefaultLibrary();
+                return _libname;
+            }
+            set
+            {
+                if (value == LibraryName.unknown)
+                    throw new ArgumentException("Cannot set library to unknown");
+            }
+        }
+
+        public static HashAlgorithm Create(string algorithm, LibraryName library = LibraryName.unknown)
+        {
+            if (library == LibraryName.unknown)
+                library = DefaultLibrary;
+
+            switch (library)
+            {
+                case LibraryName.libcrypto_so:
+                    return OpenSSL3_libcrypto_so_HashAlgorithm.Create(algorithm);
+                case LibraryName.libcrypto_so_3:
+                    return OpenSSL3_libcrypto_so_3_HashAlgorithm.Create(algorithm);
+                case LibraryName.libcrypto_3_dll:
+                    return OpenSSL3_libcrypto_3_dll_HashAlgorithm.Create(algorithm);
+                case LibraryName.libcrypto_3_x64_dll:
+                    return OpenSSL3_libcrypto_3_x64_dll_HashAlgorithm.Create(algorithm);
+                case LibraryName.libssl:
+                    return OpenSSL3_libssl_HashAlgorithm.Create(algorithm);
+
+                default:
+                    return OpenSSL3_libcrypto_so_HashAlgorithm.Create(algorithm);
+            }
+        }
+
+        public static string OpenSSL_version(LibraryName library = LibraryName.unknown)
+        {
+            if (library == LibraryName.unknown)
+                library = DefaultLibrary;
+
+            switch (library)
+            {
+                case LibraryName.libssl_so_3:
+                    return Marshal.PtrToStringAnsi(InteropOpenSSL3_libssl_so_3.OpenSSL_version());
+                case LibraryName.libcrypto_so:
+                    return Marshal.PtrToStringAnsi(InteropOpenSSL3_libcrypto_so.OpenSSL_version());
+                case LibraryName.libcrypto_so_3:
+                    return Marshal.PtrToStringAnsi(InteropOpenSSL3_libcrypto_so_3.OpenSSL_version());
+                case LibraryName.libcrypto_3_dll:
+                    return Marshal.PtrToStringAnsi(InteropOpenSSL3_libcrypto_3_dll.OpenSSL_version());
+                case LibraryName.libcrypto_3_x64_dll:
+                    return Marshal.PtrToStringAnsi(InteropOpenSSL3_libcrypto_3_x64_dll.OpenSSL_version());
+
+                default:
+                    return Marshal.PtrToStringAnsi(InteropOpenSSL3_libssl.OpenSSL_version());
+            }
+        }
+
+        public static LibraryName GetDefaultLibrary()
+        {
+            try
+            {
+                var ptr = InteropOpenSSL3_libcrypto_so.OpenSSL_version();
+                if (ptr != IntPtr.Zero)
+                    return LibraryName.libcrypto_so;
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Trace.WriteLine($"Failed to load OpenSSL3 from libcrypto.so: {ex}");
+            }
+
+            try
+            {
+                var ptr = InteropOpenSSL3_libcrypto_3_dll.OpenSSL_version();
+                if (ptr != IntPtr.Zero)
+                    return LibraryName.libcrypto_3_dll;
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Trace.WriteLine($"Failed to load OpenSSL3 from libcrypto-3.dll: {ex}");
+            }
+
+            try
+            {
+                var ptr = InteropOpenSSL3_libcrypto_3_x64_dll.OpenSSL_version();
+                if (ptr != IntPtr.Zero)
+                    return LibraryName.libcrypto_3_x64_dll;
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Trace.WriteLine($"Failed to load OpenSSL3 from libcrypto-3-x64.dll: {ex}");
+            }
+
+            try
+            {
+                var ptr = InteropOpenSSL3_libssl.OpenSSL_version();
+                if (ptr != IntPtr.Zero)
+                    return LibraryName.libssl;
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Trace.WriteLine($"Failed to load OpenSSL3 from libssl.so.3: {ex}");
+            }
+            
+            try
+            {
+                var ptr = InteropOpenSSL3_libssl_so_3.OpenSSL_version();
+                if (ptr != IntPtr.Zero)
+                    return LibraryName.libssl_so_3;
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Trace.WriteLine($"Failed to load OpenSSL3 from libssl.so.3: {ex}");
+            }
+
+            try
+            {
+                var ptr = InteropOpenSSL3_libcrypto_so_3.OpenSSL_version();
+                if (ptr != IntPtr.Zero)
+                    return LibraryName.libcrypto_so_3;
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Trace.WriteLine($"Failed to load OpenSSL3 from libcrypto.so.3: {ex}");
+            }
 
             return LibraryName.libssl;
         }

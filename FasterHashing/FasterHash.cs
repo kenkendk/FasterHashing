@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.InteropServices;
+using System.Runtime.Remoting.Channels;
 using System.Security.Cryptography;
 
 namespace FasterHashing
@@ -23,6 +24,10 @@ namespace FasterHashing
         /// Specifies using OpenSSL 1.1
         /// </summary>
         OpenSSL11,
+        /// <summary>
+        /// Specifies using OpenSSL 3
+        /// </summary>
+        OpenSSL3,
         /// <summary>
         /// Specifies using CNG
         /// </summary>
@@ -90,6 +95,9 @@ namespace FasterHashing
                 case HashImplementation.OpenSSL11:
                     result = OpenSSL11HashAlgorithm.Create(algorithm);
                     break;
+                case HashImplementation.OpenSSL3:
+                    result = OpenSSL3HashAlgorithm.Create(algorithm);
+                    break;
                 case HashImplementation.CNG:
                     result = CNGHashAlgorithm.Create(algorithm, false);
                     break;
@@ -133,6 +141,8 @@ namespace FasterHashing
             // Then try common names for OpenSSL
             if (new[] { "openssl", "ssleay", "ssl" }.Any(x => string.Equals(x, env)))
             {
+                if (SupportsImplementation(HashImplementation.OpenSSL3))
+                    return HashImplementation.OpenSSL3;
                 if (SupportsImplementation(HashImplementation.OpenSSL11))
                     return HashImplementation.OpenSSL11;
                 if (SupportsImplementation(HashImplementation.OpenSSL10))
@@ -170,6 +180,20 @@ namespace FasterHashing
 
             // Finally test for OpenSSL versions, newest first
             string version = null;
+            if (string.Equals(Environment.GetEnvironmentVariable("FH_DISABLE_OPENSSL3"), "1", StringComparison.OrdinalIgnoreCase))
+            {
+                System.Diagnostics.Trace.WriteLine("OpenSSL 3 disabled, not probing");
+            }
+            else
+            {
+                version = OpenSSL3Version;
+                if (version != null)
+                {
+                    System.Diagnostics.Trace.WriteLine($"Found OpenSSL 3 library with version string: {version}");
+                    return HashImplementation.OpenSSL3;
+                }
+            }
+
             if (string.Equals(Environment.GetEnvironmentVariable("FH_DISABLE_OPENSSL11"), "1", StringComparison.OrdinalIgnoreCase))
             {
                 System.Diagnostics.Trace.WriteLine("OpenSSL 1.1 disabled, not probing");
@@ -223,8 +247,33 @@ namespace FasterHashing
         {
             get
             {
-                try { return OpenSSL11HashAlgorithm.OpenSSL_version(); }
-                catch (Exception ex) { System.Diagnostics.Trace.WriteLine($"Failed to load OpenSSL11: {ex}"); }
+                // assume LibreSSL API-compatibility with OpenSSL 1.1
+                try {
+                    string version;
+                    if ((version = OpenSSL11HashAlgorithm.OpenSSL_version()).Contains("OpenSSL 1.1.") ||
+                         version.Contains("LibreSSL") )
+                        return version;
+                }
+                catch (Exception ex) { System.Diagnostics.Trace.WriteLine($"Failed to load OpenSSL11/ LibreSSL: {ex}"); }
+
+                return null;
+            }
+        }
+
+        /// <summary>
+        /// Gets the version string from the installed OpenSSL 1.1 library, or null if no such library is found
+        /// </summary>
+        public static string OpenSSL3Version
+        {
+            get
+            {
+                try
+                {
+                    string version;
+                    if ( (version = OpenSSL3HashAlgorithm.OpenSSL_version()).Contains("OpenSSL 3."))
+                        return version;
+                }
+                catch (Exception ex) { System.Diagnostics.Trace.WriteLine($"Failed to load OpenSSL3: {ex}"); }
 
                 return null;
             }
@@ -270,6 +319,8 @@ namespace FasterHashing
                     return OpenSSL10Version != null;
                 case HashImplementation.OpenSSL11:
                     return OpenSSL11Version != null;
+                case HashImplementation.OpenSSL3:
+                    return OpenSSL3Version != null;
                 case HashImplementation.AppleCommonCrypto:
                     return AppleCommonCryptoHashAlgorithm.IsSupported;
                 //case HashImplementation.CNG:
