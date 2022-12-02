@@ -14,7 +14,7 @@ namespace FasterHashing
   var libnames_10 = new [] { "libssl", "libssl.so.1.0", "libssl.so.1.0.0", "libeay32.dll" };
   var libnames_11 = new [] { "libssl", "libssl.so.1.1", "libssl.so.1.1.0", "libcrypto.dll", "libcrypto-1_1.dll", "libcrypto-1_1-x64.dll", "libcrypto-x64.dll" };
   // var libnames_11 = new [] { "libssl", "libssl.so.1.1", "libssl.so.1.1.0", "libcrypto-1_1.dll", "libcrypto-1_1-x64.dll"};
-  var libnames_30 = new [] {  "libssl", "libssl.so.3","libcrypto.so", "libcrypto.so.3","libssl-3.dll", "libssl-3-x64.dll","libcrypto-3.dll", "libcrypto-3-x64.dll" };
+  var libnames_3 = new [] {  "libssl", "libssl.so.3","libcrypto.so", "libcrypto.so.3", "libcrypto-3.dll", "libcrypto-3-x64.dll" };
 
   foreach(var _soname in libnames_10) {
     var soname = _soname.Replace(".", "_").Replace("-", "_");
@@ -255,13 +255,13 @@ namespace FasterHashing
 <# } #>
 
 <#
-  foreach(var _soname in libnames_30) {
+  foreach(var _soname in libnames_3) {
     var soname = _soname.Replace(".", "_").Replace("-", "_");
 #>
     /// <summary>
-    /// P/Invoke signatures for OpenSSL 3.0 libraries, using <#= _soname #>
+    /// P/Invoke signatures for OpenSSL 3 libraries, using <#= _soname #>
     /// </summary>
-    internal static class InteropOpenSSL30_<#= soname #>
+    internal static class InteropOpenSSL3_<#= soname #>
     {
         /// <summary>
         /// The library implementing OpenSSL (automatically uses .dll, .so, or .dylib)
@@ -362,13 +362,6 @@ namespace FasterHashing
         /// <param name="t">The version information to obtain (use zero).</param>
         [DllImport(DLLNAME, CallingConvention = CallingConvention.Cdecl, SetLastError = true)]
         public extern static IntPtr OpenSSL_version(int t = 0);
-		
-		/// <summary>
-        /// Gets the string representation of the SSL library version
-        /// </summary>
-        /// <returns>A const long with the SSL version.</returns>
-        [DllImport(DLLNAME, CallingConvention = CallingConvention.Cdecl, SetLastError = true)]
-        public extern static int OpenSSL_version_num();
     }
 
 <# } #>

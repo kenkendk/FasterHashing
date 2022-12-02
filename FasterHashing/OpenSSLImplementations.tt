@@ -11,19 +11,19 @@ using System.Security.Cryptography;
 namespace FasterHashing
 {
 <# 
-  var libs = new[] { "OpenSSL10", "OpenSSL11", "OpenSSL30" };
+  var libs = new[] { "OpenSSL10", "OpenSSL11", "OpenSSL3" };
   var algs = new[] { null, "MD5", "SHA1", "SHA256", "SHA384", "SHA512" };
   var libnames_10 = new [] { "libssl", "libssl.so.1.0", "libssl.so.1.0.0", "libeay32.dll" };
   var libnames_11 = new [] { "libssl", "libssl.so.1.1", "libssl.so.1.1.0", "libcrypto.dll", "libcrypto-1_1.dll", "libcrypto-1_1-x64.dll", "libcrypto-x64.dll" };
   
   // OPENSSL >=1.1: naming scheme for windows is libcrypto-x_x.dll - we still keep libcrypto.dll until LIBRESSL support is complete 
   // var libnames_11 = new [] { "libssl", "libssl.so.1.1", "libssl.so.1.1.0", "libcrypto-1_1.dll", "libcrypto-1_1-x64.dll" };
-  var libnames_30 = new [] { "libssl", "libssl.so.3", "libcrypto.so", "libcrypto.so.3","libssl-3.dll", "libssl-3-x64.dll","libcrypto-3.dll", "libcrypto-3-x64.dll"  };
+  var libnames_3 = new [] { "libssl", "libssl.so.3", "libcrypto.so", "libcrypto.so.3","libcrypto-3.dll", "libcrypto-3-x64.dll"  };
 
 
   foreach(var lib in libs) {
   foreach(var alg in algs) {
-  foreach(var _soname in (lib == "OpenSSL10" ? libnames_10 : lib == "OpenSSL11" ? libnames_11 : libnames_30)) {
+  foreach(var _soname in (lib == "OpenSSL10" ? libnames_10 : lib == "OpenSSL11" ? libnames_11 : libnames_3)) {
 
     var destroy = lib == "OpenSSL10" ? "destroy" : "free";
     var cleanup = lib == "OpenSSL10" ? "cleanup" : "reset";
@@ -34,7 +34,7 @@ namespace FasterHashing
 
 #>
     /// <summary>
-    /// Implementation of <#= alg == null ? "a" : "the " + alg #> hash algorithm, using OpenSSL <#= lib == "OpenSSL10" ? "1.0" : lib == "OpenSSL11" ? "1.1" : "3.0" #>
+    /// Implementation of <#= alg == null ? "a" : "the " + alg #> hash algorithm, using OpenSSL <#= lib == "OpenSSL10" ? "1.0" : lib == "OpenSSL11" ? "1.1" : "3" #>
     /// </summary>
     public class <#= lib #>_<#= soname #>_HashAlgorithm<#= alg ?? "" #> : <#= alg ?? "HashAlgorithm" #>
     {
